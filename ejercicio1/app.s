@@ -6,6 +6,9 @@
 	.equ GPIO_GPFSEL0,   0x00
 	.equ GPIO_GPLEV0,    0x34
 
+	//Incluyo archivo con funciones auxiliares
+	.include "funs.s"
+
 	.globl main
 
 main:
