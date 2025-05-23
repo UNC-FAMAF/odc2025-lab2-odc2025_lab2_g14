@@ -16,8 +16,8 @@ main:
  	mov x20, x0	// Guarda la dirección base del framebuffer en x20
 	//---------------- CODE HERE ------------------------------------
 
-	movz x10, 0x79, lsl 16 // ff 0000
-	movk x10, 0xbacc, lsl 00 //  Termino de elejir color amarillo ff ff00
+	movz x10, 0x79, lsl 16 // Elijo color
+	movk x10, 0xbacc, lsl 00 //  Termino de elegir color: 0x79bacc
 
 
 	mov x2, SCREEN_HEIGH         // Y Size
@@ -41,28 +41,9 @@ loop0:
 	mov x3, #100
 	mov x4, #100
 
-	BL calcular_posicion
-
-	movz x10, 0xff, lsl 16 // ff 0000
-	stur w10,[x0]
-
-	mov x3, #101
-	mov x4, #101
-
-	BL calcular_posicion
-
-	movz x10, 0xff, lsl 16 // ff 0000
-	stur w10,[x0]
-
-	mov x3, #102
-	mov x4, #102
-	BL calcular_posicion
-
+	BL calcular_posicion // Calculo mi posicion desde 100 100
 
 //pinto pasto de mitad hacia abajo:
-	movz x10, 0xff, lsl 16 // ff 0000
-	stur w10,[x0]
-
 	mov x1, SCREEN_WIDTH
 	mov x2, #240
 	mov x3, #0
