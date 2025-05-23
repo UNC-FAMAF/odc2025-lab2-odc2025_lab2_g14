@@ -16,14 +16,15 @@ main:
  	mov x20, x0	// Guarda la dirección base del framebuffer en x20
 	//---------------- CODE HERE ------------------------------------
 
-	movz x10, 0x79, lsl 16 // Elijo color
-	movk x10, 0xbacc, lsl 00 //  Termino de elegir color: 0x79bacc
+//Pintamos el fonde de celeste
+	movz x10, 0x83, lsl 16 // Elijo color
+	movk x10, 0xb6c1, lsl 00 //  Termino de elegir color: 0x79bacc
 
 
 	mov x2, SCREEN_HEIGH         // Y Size
-loop1:
+ loop1:
 	mov x1, SCREEN_WIDTH         // X Size
-loop0:
+ loop0:
 	stur w10,[x0]  // Colorear el pixel N
 	add x0,x0,4	   // Siguiente pixel
 	sub x1,x1,1	   // Decrementar contador X
@@ -33,25 +34,28 @@ loop0:
 
 
 	add x0, xzr, x20 // Reinicio el FrameBuffer
-	movz x10, 0xff, lsl 00 // Elijo color azul 00 00ff
 
-	mov x2, SCREEN_HEIGH         // Y Size
-	mov x1, SCREEN_WIDTH         // X Size
-
-	mov x3, #100
-	mov x4, #100
-
-	BL calcular_posicion // Calculo mi posicion desde 100 100
-
-//pinto pasto de mitad hacia abajo:
+//pinto pasto desde y=314 hacia abajo:
 	mov x1, SCREEN_WIDTH
-	mov x2, #240
+	mov x2, #166
 	mov x3, #0
-	mov x4, #240
-	movz x10, 0x8c, lsl 16
-	movk x10, 0xa748, lsl 00
+	mov x4, #314
+	movz x10, 0x91, lsl 16
+	movk x10, 0xab49, lsl 00
 
 	BL pintar_rectangulo
+	
+
+//pinto pasto desde y=410 hacia abajo:
+	mov x1, SCREEN_WIDTH
+	mov x2, #70
+	mov x3, #0
+	mov x4, #410
+	movz x10, 0xff, lsl 16
+	movk x10, 0xffff, lsl 00
+
+	BL pintar_rectangulo
+
 
 
 
