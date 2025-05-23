@@ -17,9 +17,9 @@ main:
 	//---------------- CODE HERE ------------------------------------
 
 //Pintamos el fonde de celeste
+
 	movz x10, 0x83, lsl 16 // Elijo color
 	movk x10, 0xb6c1, lsl 00 //  Termino de elegir color: 0x79bacc
-
 
 	mov x2, SCREEN_HEIGH         // Y Size
  loop1:
@@ -33,33 +33,28 @@ main:
 	cbnz x2,loop1  // Si no es la última fila, salto
 
 
-	add x0, xzr, x20 // Reinicio el FrameBuffer
 
 //pinto pasto desde y=314 hacia abajo:
+
 	mov x1, SCREEN_WIDTH
 	mov x2, #166
 	mov x3, #0
 	mov x4, #314
+	
 	movz x10, 0x91, lsl 16
 	movk x10, 0xab49, lsl 00
 
 	BL pintar_rectangulo
-	
 
-//pinto pasto desde y=410 hacia abajo:
 	mov x1, SCREEN_WIDTH
 	mov x2, #70
 	mov x3, #0
-	mov x4, #410
-	movz x10, 0xff, lsl 16
-	movk x10, 0xffff, lsl 00
+	mov x4, #200
+	movz x10, 0x55, lsl 16
+	movk x10, 0x5555, lsl 00
 
 	BL pintar_rectangulo
-
-
-
-
-
+ 
 
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE

@@ -21,13 +21,16 @@ pintar_rectangulo:
 		//	x2 -> Alto
 		// x3 -> x
 		// x4 -> y
-		// reservamos y guardamos las variables 
-		SUB SP, SP, 40 										
-		STUR x9,  [SP, 0]
-		STUR x11, [SP, 8]
-		STUR x12, [SP, 16]
-		STUR x13, [SP, 24]
-		STUR x14, [SP, 32]
+		// reservamos y guardamos las variables
+
+		
+    	SUB SP, SP, 48                                        
+    	STUR x30, [SP, 40]
+    	STUR x20, [SP, 32]  // <-- Guardamos x20
+    	STUR x13, [SP, 24]
+    	STUR x12, [SP, 16]
+    	STUR x11, [SP, 8]
+    	STUR x9,  [SP, 0]
 
 		BL calcular_posicion  	
 		mov x9, x2							// guardamos el alto
@@ -46,11 +49,18 @@ pintar_rectangulo:
 				cbnz x9, loopO	
 
 		// Devolvemos los valores previos del stack
-		LDR x9, [SP, 0]					 			
-		LDR x11, [SP, 8]					 			
-		LDR x12, [SP, 16]					 			
-		LDR x13, [SP, 24]					 			
-		LDR x14, [SP, 32]					 			
-		ADD SP, SP, 40
-	ret
+		LDR x9, [SP, 0]                             
+   		LDR x11, [SP, 8]                             
+    	LDR x12, [SP, 16]                             
+    	LDR x13, [SP, 24]                             
+    	LDR x20, [SP, 32]  // <-- Restauramos x20
+    	LDR x30, [SP, 40]
+    	ADD SP, SP, 48
+
+ret
+
+
+
+
+
 
