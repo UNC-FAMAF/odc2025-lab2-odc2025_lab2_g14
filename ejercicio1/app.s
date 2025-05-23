@@ -46,11 +46,10 @@ main:
 
 	BL pintar_rectangulo
 
-//Pinto pasto de la cancha
 	mov x1, SCREEN_WIDTH
 	mov x2, #104
 	mov x3, #0
-	mov x4, #410
+	mov x4, #376
 	movz x10, 0x59, lsl 16
 	movk x10, 0x803a, lsl 00
 
