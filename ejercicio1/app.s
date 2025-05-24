@@ -32,7 +32,17 @@ main:
 	sub x2,x2,1	   // Decrementar contador Y
 	cbnz x2,loop1  // Si no es la última fila, salto
 
+//Pinto Arboles:
 
+	mov x1, SCREEN_WIDTH
+	mov x2, #192
+	mov x3, #0
+	mov x4, #166
+	
+	movz x10, 0x04, lsl 16
+	movk x10, 0x1e1b, lsl 00
+
+	BL pintar_rectangulo
 
 //pinto pasto desde y=314 hacia abajo:
 
@@ -66,10 +76,13 @@ main:
 
 	BL pintar_rectangulo
 
-	//mov x1, SCREEN_WIDTH
-	//mov x2,	#4
-	//mov x3,	#0
-	//mov x4,	
+	mov x1, #230
+	mov x2, #5
+	mov x3, #205
+	movz x10, 0xac, lsl 16
+	movk x10, 0xaa8d, lsl 00
+
+	BL pintar_rectangulo
 
 
 
