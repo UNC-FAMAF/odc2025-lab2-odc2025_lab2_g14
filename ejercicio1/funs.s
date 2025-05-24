@@ -3,6 +3,9 @@
 
 //-----Funciones Auxiliares-----///
 
+
+
+
 calcular_posicion:
 	//Direccion = Direccion de inicio + 4*[x+(y*640)]
 	// x3 = X
@@ -14,6 +17,7 @@ calcular_posicion:
 	lsl x0, x0, 2          // x0 = ((640 * y) * x) *4
 	add x0, x0, x20        // x0 = ((640 * y) * x) *4 + posicion inicial
 ret
+
 
 pintar_rectangulo:
 		// 	w10 -> Color
@@ -58,6 +62,7 @@ pintar_rectangulo:
     	ADD SP, SP, 48
 
 ret
+
 
 
 

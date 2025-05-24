@@ -55,6 +55,23 @@ main:
 
 	BL pintar_rectangulo
  
+/* lineas de la cancha */
+	mov x1, SCREEN_WIDTH
+	mov x2,	#5
+	mov x3,	#0
+	mov x4,	#373
+	movz x10, 0xf5, lsl 16
+	movk x10, 0xf2ce, lsl 00
+
+
+	BL pintar_rectangulo
+
+	//mov x1, SCREEN_WIDTH
+	//mov x2,	#4
+	//mov x3,	#0
+	//mov x4,	
+
+
 
 // arco
 
@@ -64,8 +81,8 @@ main:
 	mov x3, #201
 	mov x4, #256
 	
-	movz x10, 0xf8, lsl 16
-	movk x10, 0xedd1, lsl 00
+	movz x10, 0xde, lsl 16
+	movk x10, 0xd3bc, lsl 00
 
 	BL pintar_rectangulo
 
@@ -73,25 +90,15 @@ main:
 	mov x1, #9
 	mov x2, #122
 	mov x3, #201
-	mov x4, #256
-	
-	movz x10, 0xf8, lsl 16
-	movk x10, 0xedd1, lsl 00
-
 	BL pintar_rectangulo
 
 	//poste derecho
-	mov x1, #9
-	mov x2, #122
 	mov x3, #435
-	mov x4, #256
-	
-	movz x10, 0xf8, lsl 16
-	movk x10, 0xedd1, lsl 00
-
 	BL pintar_rectangulo
 
 
+
+/*--------------------*/
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE
 
@@ -116,3 +123,4 @@ main:
 
 InfLoop:
 	b InfLoop
+
