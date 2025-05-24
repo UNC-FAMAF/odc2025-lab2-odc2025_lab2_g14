@@ -162,6 +162,46 @@ end_loop2:
 	mov x3, #435
 	BL pintar_rectangulo
 
+/*----Tablero----*/
+	
+	//patas
+		mov x9, #166
+		mov x11, #219
+		mov x12, #2
+		loopTablero:
+			mov x1, #27 				//Ancho
+			mov x2, #123				//Largo 
+			mov x3, x9					//Posicion inicial eje x
+			mov x4, x11					//Posicion inicial eje x
+			movz x10, 0x2b, lsl 16		
+			movk x10, 0x3536, lsl 00
+			BL pintar_rectangulo
+
+
+
+
+			mov x1, #27					//Ancho
+			mov x2, #10					//Largo
+			mov x3, x9					//Posicion inicial eje x
+			sub x4, x11, #10			//Posicion inicial eje x
+			movz x10, 0x0b, lsl 16
+			movk x10, 0x1017, lsl 00
+
+			BL pintar_rectangulo
+
+			sub x12, x12, #1
+			add x9, x9, #282
+			cbnz x12, loopTablero
+		
+	//base del Tablero
+		mov x1, #415
+		mov x2, #144
+		mov x3, #109
+		mov x4, #63
+		movz x10, 0x2b, lsl 16
+		movk x10, 0x3536, lsl 00
+		BL pintar_rectangulo
+
 
 /*--------------------*/
 	// Ejemplo de uso de gpios
