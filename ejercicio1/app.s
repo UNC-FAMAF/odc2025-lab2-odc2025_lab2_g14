@@ -73,8 +73,8 @@ main:
 	movz x10, 0xf5, lsl 16
 	movk x10, 0xf2ce, lsl 00
 
-
 	BL pintar_rectangulo
+
 
 	mov x1, #230
 	mov x2, #5
@@ -107,6 +107,16 @@ main:
 
 	//poste derecho
 	mov x3, #435
+	BL pintar_rectangulo
+
+//area chica
+	mov x1, #498
+	mov x2, #5
+	mov x3, #68
+	mov x4, #556
+	movz x10, 0xf5, lsl 16
+	movk x10, 0xf2ce, lsl 00
+
 	BL pintar_rectangulo
 
 
