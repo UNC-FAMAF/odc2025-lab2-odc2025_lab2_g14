@@ -14,7 +14,6 @@
 main:
 	// x0 contiene la direccion base del framebuffer
  	mov x20, x0	// Guarda la dirección base del framebuffer en x20
-	//---------------- CODE HERE ------------------------------------
 
 //Pintamos el fonde de celeste
 
@@ -22,9 +21,9 @@ main:
 	movk x10, 0xb6c1, lsl 00 //  Termino de elegir color: 0x79bacc
 
 	mov x2, SCREEN_HEIGH         // Y Size
- loop1:
+loop1:
 	mov x1, SCREEN_WIDTH         // X Size
- loop0:
+loop0:
 	stur w10,[x0]  // Colorear el pixel N
 	add x0,x0,4	   // Siguiente pixel
 	sub x1,x1,1	   // Decrementar contador X
@@ -65,7 +64,9 @@ main:
 
 	BL pintar_rectangulo
  
-/* lineas de la cancha */
+/*----- lineas de la cancha -------*/
+
+	// linea del fondo
 	mov x1, SCREEN_WIDTH
 	mov x2,	#5
 	mov x3,	#0
@@ -75,18 +76,70 @@ main:
 
 	BL pintar_rectangulo
 
+	// linea horiz. área chica
+	mov x1, #498
+	mov x3, #68
+	mov x4, #400
+	BL pintar_rectangulo
 
+	//linea diagonal izq. área chica:
+	mov x1, #4
+	mov x2, #4
+	mov x3, #92
+	mov x4, #375
+
+loop_diag:
+    BL pintar_rectangulo
+    SUB x3, x3, #1
+    ADD x4, x4, #1
+
+    // Verificar si x3 > 68
+    MOV x5, #67
+    CMP x3, x5
+    BLE end_loop     // Si x3 <= 68, salta al final
+
+    // Verificar si x4 < 400
+    MOV x6, #400
+    CMP x4, x6
+    BGE end_loop     // Si x4 >= 400, salta al final
+
+    B loop_diag          // Repetir bucle si ambas condiciones se cumplen
+end_loop:
+
+	//linea diagonal der. area chica:
+	mov x3, #537
+	mov x4, #375
+
+loop_diag2:
+    BL pintar_rectangulo
+    ADD x3, x3, #1
+    ADD x4, x4, #1
+
+    // Verificar si x3 > 68
+    MOV x5, #566
+    CMP x3, x5
+    BGE end_loop2     // Si x3 <= 68, salta al final
+
+    // Verificar si x4 < 400
+    MOV x6, #400
+    CMP x4, x6
+    BGE end_loop2     // Si x4 >= 400, salta al final
+
+    B loop_diag2          // Repetir bucle si ambas condiciones se cumplen
+end_loop2:
+
+	//sombra bajo palos
 	mov x1, #230
 	mov x2, #5
 	mov x3, #205
+	mov x4, #373
 	movz x10, 0xac, lsl 16
 	movk x10, 0xaa8d, lsl 00
-
 	BL pintar_rectangulo
 
+/*---- Fin lineas ---*/
 
-
-// arco
+/*-- arco --*/ 
 
 	// travesaño
 	mov x1, #243
@@ -108,17 +161,6 @@ main:
 	//poste derecho
 	mov x3, #435
 	BL pintar_rectangulo
-
-//area chica
-	mov x1, #498
-	mov x2, #5
-	mov x3, #68
-	mov x4, #556
-	movz x10, 0xf5, lsl 16
-	movk x10, 0xf2ce, lsl 00
-
-	BL pintar_rectangulo
-
 
 
 /*--------------------*/
