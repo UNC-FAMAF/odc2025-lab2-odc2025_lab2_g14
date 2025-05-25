@@ -203,6 +203,25 @@ end_loop2:
 		BL pintar_rectangulo
 
 
+
+/*---Pintar Letras---*/
+	//Letras E
+	mov x9, #2
+	mov x11, #254
+		loop_E:
+			mov x1, #8
+			mov x2, #31
+			mov x3, x11
+			mov x4, #78
+			mov x5, #22
+			movz x10, 0xde, lsl 16
+			movk x10, 0xd3bc, lsl 00
+			BL pintar_E
+			sub x9, x9, #1
+			add x11, x11, #157
+			cbnz x9, loop_E
+
+
 /*--------------------*/
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE

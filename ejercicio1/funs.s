@@ -64,8 +64,67 @@ pintar_rectangulo:
 ret
 
 
+pintar_E:
+	SUB SP, SP, 64                                        
+	STUR x30, [SP, 48]
+	STUR x20, [SP, 40]  // <-- Guardamos x20
+	STUR x5, [SP, 32]
+	STUR x4, [SP, 24]
+ 	STUR x3, [SP, 16]
+    STUR x2,  [SP, 8]
+	STUR x1, [SP, 0]
+	// x1 -> grosor
+	// x2 -> Alto
+	// x3 -> posición inicial eje x
+	// x4 -> posición inicial eje y
+	// x5 -> Ancho
+	BL pintar_rectangulo	// Pinta la columna de la 'E'
+	mov x7, x4
+	mov x6, x2
+	mov x2, x1	// x2 = grosor
+	mov x1, x5	// x1 = Ancho
+	mov x5, x6	// x5 = Alto
+	sub x2, x2, #2	// El grosor de las lineas en horizontal son menores a la columna de la 'E'
 
+	BL pintar_rectangulo	//Pinta la linea de arriba de la 'E'
 
+	add x4, x4, x6
+	sub x4, x4, x2	// calculo la posicion inicial de la ultima linea de la 'E' en el eje y
 
+	BL pintar_rectangulo	// Pinta la última linea de la 'E'
+
+	and x6, x2, #1
+
+	cbz x6, par
+	add x2, x2, #1
+	and x6, x5, #1
+	cbz x6, par
+	sub x5, x5, #1		// Para calcular la linea del medio el grosor y el largo deben ser pares
+
+	par:
+	sub x1, x1, #1	// la linea del medio es menos ancha que las demas
+	mov x6, x2
+	lsr x6, x6, #1	//calculo la mitad del grosor
+	mov x4, x7
+	sub x4, x4, x2
+	add x5, x4, x5	//calculo el eje Y al final de la 'E'
+	add x4, x4, x5
+
+	lsr x4, x4, #1	// Calculo la posicion del medio en el eje Y
+	add x4, x4, x6	// Apunta a la posicion inicial de la linea del medio
+
+	BL pintar_rectangulo
+
+	LDR x1, [SP, 0]
+	LDR x2, [SP, 8]                             
+   	LDR x3, [SP, 16]                             
+    LDR x4, [SP, 24]                             
+    LDR x5, [SP, 32]                             
+    LDR x20, [SP, 40]  // <-- Restauramos x20
+    LDR x30, [SP, 48]
+    ADD SP, SP, 64
+	
+
+ret
 
 
