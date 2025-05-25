@@ -127,4 +127,107 @@ pintar_E:
 
 ret
 
+pintar_H:
+	// x1 -> grosor
+	// x2 -> Alto
+	// x3 -> eje x (empieza)
+	// x4 -> eje y (empieza)
+	// x5 -> Ancho
+	// x6 -> eje x (Linea horizontal)
+	// x7 -> eje y (Linea horizontal)
+
+	SUB SP, SP, 80                                      
+	STUR x30, [SP, 64]
+	STUR x20, [SP, 56]  // <-- Guardamos x20
+	STUR x7, [SP, 48]
+	STUR x6, [SP, 40]
+	STUR x5, [SP, 32]
+	STUR x4, [SP, 24]
+ 	STUR x3, [SP, 16]
+    STUR x2,  [SP, 8]
+	STUR x1, [SP, 0]
+
+	BL pintar_rectangulo
+
+	add x3, x3, x5
+	sub x3, x3, x1
+
+	BL pintar_rectangulo
+
+	mov x8, x1	// x8 = grosor
+	mov x1, x5	// x1 = Ancho
+	mov x5, x2	// x5 = Alto
+	mov x2, x8	// x2 = grosor
+
+	sub x1, x1, x8
+	sub x1, x1, x8
+
+	sub x2, x2, #2
+
+	mov x3, x6
+	mov x4, x7
+
+	BL pintar_rectangulo
+
+	LDR x1, [SP, 0]
+	LDR x2, [SP, 8]                             
+   	LDR x3, [SP, 16]                             
+    LDR x4, [SP, 24]                             
+    LDR x5, [SP, 32]
+	LDR x6, [SP, 40]
+	LDR x7, [SP, 48]
+    LDR x20, [SP, 56]  // <-- Restauramos x20
+    LDR x30, [SP, 64]
+    ADD SP, SP, 80
+
+ret
+
+
+pintar_T:
+	SUB SP, SP, 80                                      
+	STUR x30, [SP, 64]
+	STUR x20, [SP, 56]  // <-- Guardamos x20
+	STUR x7, [SP, 48]
+	STUR x6, [SP, 40]
+	STUR x5, [SP, 32]
+	STUR x4, [SP, 24]
+ 	STUR x3, [SP, 16]
+    STUR x2,  [SP, 8]
+	STUR x1, [SP, 0]	
+
+	// x1 -> Ancho
+	// x2 -> grosor
+	// x3 -> eje x (empieza)
+	// x4 -> eje y (empieza)
+	// x5 -> Alto
+	// x6 -> eje x (Linea vertical)
+	// x7 -> eje y (Linea vertical)
+
+	BL pintar_rectangulo
+
+	mov x3, x6	// x3 = eje x (comienzo de linea vertical)
+	mov x4, x7	// x4 = eje y (comienzo de linea vertical)
+	sub x5, x5, x2
+	add x2, x2, #2	//distinto grosor
+	
+	mov x8, x1	// x8 = Ancho
+	mov x1, x2	// x1 = grosor
+	mov x2, x5	// x2 = Alto
+	mov x5, x8	// x2 = grosor
+
+	BL pintar_rectangulo
+
+
+
+	LDR x1, [SP, 0]
+	LDR x2, [SP, 8]                             
+   	LDR x3, [SP, 16]                             
+    LDR x4, [SP, 24]                             
+    LDR x5, [SP, 32]
+	LDR x6, [SP, 40]
+	LDR x7, [SP, 48]
+    LDR x20, [SP, 56]  // <-- Restauramos x20
+    LDR x30, [SP, 64]
+    ADD SP, SP, 80
+ret
 

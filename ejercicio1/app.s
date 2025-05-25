@@ -220,6 +220,29 @@ end_loop2:
 			sub x9, x9, #1
 			add x11, x11, #157
 			cbnz x9, loop_E
+		
+		//Letra H
+		mov x1, #9
+		mov x2, #29
+		mov x3, #148
+		mov x4, #79
+		mov x5,	#27
+		mov x6, #157
+		mov x7, #90
+
+		BL pintar_H
+
+	//Letra T
+		mov x1, #25
+		mov x2, #6
+		mov x3, #466
+		mov x4, #79
+		mov x5,	#29
+		mov x6, #475
+		mov x7, #85
+
+		BL pintar_T
+
 
 
 /*--------------------*/
