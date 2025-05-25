@@ -15,15 +15,16 @@ main:
 	// x0 contiene la direccion base del framebuffer
  	mov x20, x0	// Guarda la dirección base del framebuffer en x20
 
-//Pintamos el fonde de celeste
+/*---Cielo---*/
 
 	movz x10, 0x83, lsl 16 // Elijo color
 	movk x10, 0xb6c1, lsl 00 //  Termino de elegir color: 0x79bacc
 
 	mov x2, SCREEN_HEIGH         // Y Size
-loop1:
+
+	loop1:
 	mov x1, SCREEN_WIDTH         // X Size
-loop0:
+	loop0:
 	stur w10,[x0]  // Colorear el pixel N
 	add x0,x0,4	   // Siguiente pixel
 	sub x1,x1,1	   // Decrementar contador X
@@ -31,7 +32,97 @@ loop0:
 	sub x2,x2,1	   // Decrementar contador Y
 	cbnz x2,loop1  // Si no es la última fila, salto
 
-//Pinto Arboles:
+/*---Nubes---*/
+  /*-Nube 1-*/
+	movz x10, 0xff, lsl 16
+	movk x10, 0xffff, lsl 00
+
+	mov x1, #39
+	mov x2, #30
+	mov x3, #107
+	mov x4, #18
+
+	BL pintar_rectangulo
+
+	mov x1, #63
+	mov x2, #15
+	mov x3, #95
+	mov x4, #33
+	BL pintar_rectangulo
+  /*-Nube 2-*/
+	mov x1, #19
+	mov x2, #7
+	mov x3, #25
+	mov x4, #35
+
+	BL pintar_rectangulo
+
+	mov x1, #30
+	mov x2, #6
+	mov x3, #20
+	mov x4, #42
+	BL pintar_rectangulo
+  /*-Nube 3-*/
+	mov x1, #32
+	mov x2, #11
+	mov x3, #46
+	mov x4, #78
+
+	BL pintar_rectangulo
+
+	mov x1, #46
+	mov x2, #6
+	mov x3, #39
+	mov x4, #89
+	BL pintar_rectangulo
+
+  /*-Nube 4-*/
+	mov x1, #32
+	mov x2, #11
+	mov x3, #290
+	mov x4, #9
+
+	BL pintar_rectangulo
+
+	mov x1, #48
+	mov x2, #12
+	mov x3, #282
+	mov x4, #20
+	BL pintar_rectangulo
+/*-Sombras de Nube-*/
+   /*-Nube 1-*/
+	movz x10, 0xdf, lsl 16
+	movk x10, 0xdfdd, lsl 00
+	mov x1, #63
+	mov x2, #3
+	mov x3, #95
+	mov x4, #48
+	BL pintar_rectangulo
+
+   /*-Nube 2-*/
+	mov x1, #30
+	mov x2, #3
+	mov x3, #20
+	mov x4, #48
+	BL pintar_rectangulo
+
+   /*-Nube 3-*/
+	mov x1, #46
+	mov x2, #3
+	mov x3, #39
+	mov x4, #95
+	BL pintar_rectangulo
+
+   /*-Nube 4-*/
+	mov x1, #48
+	mov x2, #3
+	mov x3, #282
+	mov x4, #32
+	BL pintar_rectangulo
+
+
+
+/*---Arboles---*/
 
 	mov x1, SCREEN_WIDTH
 	mov x2, #192
@@ -43,7 +134,7 @@ loop0:
 
 	BL pintar_rectangulo
 
-//pinto pasto desde y=314 hacia abajo:
+/*---Pasto---*/
 
 	mov x1, SCREEN_WIDTH
 	mov x2, #166
@@ -88,7 +179,7 @@ loop0:
 	mov x3, #92
 	mov x4, #375
 
-loop_diag:
+	loop_diag:
     BL pintar_rectangulo
     SUB x3, x3, #1
     ADD x4, x4, #1
@@ -104,13 +195,13 @@ loop_diag:
     BGE end_loop     // Si x4 >= 400, salta al final
 
     B loop_diag          // Repetir bucle si ambas condiciones se cumplen
-end_loop:
+	end_loop:
 
 	//linea diagonal der. area chica:
 	mov x3, #537
 	mov x4, #375
 
-loop_diag2:
+	loop_diag2:
     BL pintar_rectangulo
     ADD x3, x3, #1
     ADD x4, x4, #1
@@ -126,7 +217,7 @@ loop_diag2:
     BGE end_loop2     // Si x4 >= 400, salta al final
 
     B loop_diag2          // Repetir bucle si ambas condiciones se cumplen
-end_loop2:
+	end_loop2:
 
 	//sombra bajo palos
 	mov x1, #230
@@ -139,7 +230,7 @@ end_loop2:
 
 /*---- Fin lineas ---*/
 
-/*-- arco --*/ 
+/*---Arco---*/ 
 
 	// travesaño
 	mov x1, #243
