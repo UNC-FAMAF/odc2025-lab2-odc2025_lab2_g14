@@ -18,6 +18,130 @@ calcular_posicion:
 	add x0, x0, x20        // x0 = ((640 * y) * x) *4 + posicion inicial
 ret
 
+pintar_pixel:
+		// x3 -> pos X
+		// x4  -> pos y 
+		//w10 color 
+		SUB SP, SP, 8 										
+		STUR x30, [SP, 0]
+
+		BL calcular_posicion 					
+
+		stur w10, [x0]                     
+
+		LDR x30, [SP, 0]
+		ADD SP, SP, 8	
+ret
+
+check_pos_in_circle:
+    // x3 = X a verificar
+    // x4 = Y a verificar
+    // x5 = X centro
+    // x6 = Y centro
+    // x1 = radio
+    sub sp, sp, #32
+    stur x30, [sp, #24]
+    stur x15, [sp, #16]
+    stur x14, [sp, #8]
+    stur x13, [sp, #0]
+
+    // Calcular (X-Xc)² + (Y-Yc)²
+    sub x13, x3, x5         // x13 = X - Xc
+    mul x13, x13, x13       // x13 = (X-Xc)²
+    
+    sub x14, x4, x6         // x14 = Y - Yc
+    mul x14, x14, x14       // x14 = (Y-Yc)²
+    
+    add x13, x13, x14       // x13 = (X-Xc)² + (Y-Yc)²
+    
+    mul x15, x1, x1         // x15 = radio²
+    
+    cmp x13, x15
+    b.gt fuera_circulo
+    
+    // Si está dentro del círculo, pintar
+    bl pintar_pixel
+
+fuera_circulo:
+    ldur x13, [sp, #0]
+    ldur x14, [sp, #8]
+    ldur x15, [sp, #16]
+    ldur x30, [sp, #24]
+    add sp, sp, #32
+
+
+ret
+
+pintar_circulo:
+    // x5 = X centro
+    // x6 = Y centro
+    // x1 = radio
+    // x10 = color
+    sub sp, sp, #56
+    stur x30, [sp, #48]
+    stur x12, [sp, #40]
+    stur x11, [sp, #32]
+    stur x9, [sp, #24]
+    stur x8, [sp, #16]
+    stur x7, [sp, #8]
+    stur x6, [sp, #0]
+
+    // Calcular límites del área a recorrer
+    sub x7, x5, x1          // X inicio = Xcentro - radio
+    add x8, x5, x1          // X fin = Xcentro + radio
+    
+    sub x9, x6, x1          // Y inicio = Ycentro - radio
+    add x11, x6, x1         // Y fin = Ycentro + radio
+
+    // Ajustar coordenada X mínima
+    cmp x7, #0
+    b.ge ajuste_x_max
+    mov x7, #0              // Si X inicio < 0, ajustar a 0
+ajuste_x_max:
+    cmp x8, SCREEN_WIDTH
+    b.le ajuste_y_min
+    mov x8, SCREEN_WIDTH    // Si X fin > ancho, ajustar
+ajuste_y_min:
+    cmp x9, #0
+    b.ge ajuste_y_max
+    mov x9, #0              // Si Y inicio < 0, ajustar a 0
+ajuste_y_max:
+    cmp x11, SCREEN_HEIGH
+    b.le iniciar_bucles
+    mov x11, SCREEN_HEIGH  // Si Y fin > alto, ajustar
+
+iniciar_bucles:
+    mov x4, x9              // Y actual = Y inicio
+
+bucle_y:
+    cmp x4, x11             // Comparar con Y fin
+    b.gt fin_pintar
+
+    mov x3, x7              // X actual = X inicio
+
+bucle_x:
+    cmp x3, x8              // Comparar con X fin
+    b.gt siguiente_y
+    
+    bl check_pos_in_circle  // Verificar si (x3,x4) está en el círculo
+    
+    add x3, x3, #1          // Siguiente columna
+    b bucle_x
+
+siguiente_y:
+    add x4, x4, #1          // Siguiente fila
+    b bucle_y
+
+fin_pintar:
+    ldur x6, [sp, #0]
+    ldur x7, [sp, #8]
+    ldur x8, [sp, #16]
+    ldur x9, [sp, #24]
+    ldur x11, [sp, #32]
+    ldur x12, [sp, #40]
+    ldur x30, [sp, #48]
+    add sp, sp, #56
+ret
 
 pintar_rectangulo:
 		// 	w10 -> Color
@@ -62,6 +186,9 @@ pintar_rectangulo:
     	ADD SP, SP, 48
 
 ret
+
+
+
 
 
 pintar_E:

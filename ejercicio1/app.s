@@ -270,6 +270,15 @@ main:
 	movk x10, 0xaa8d, lsl 00
 	BL pintar_rectangulo
 
+/*-- Punto penal --*/
+	mov x1, #6
+	movz x10, 0xf5, lsl 16
+	movk x10, 0xf2ce, lsl 00
+	mov x5, #317
+	mov x6, #428
+	BL pintar_circulo
+/*-----*/
+
 /*---- Fin lineas ---*/
 
 /*---Arco---*/ 
@@ -376,8 +385,38 @@ main:
 
 		BL pintar_T
 
+	//Letra O 
+		mov x1, #14 
+		mov x5, #195
+		mov x6, #94
+		BL pintar_circulo  
+		mov x1, #8
+		movz x10, 0x2b, lsl 16
+		movk x10, 0x3536, lsl 00
+		BL pintar_circulo
 
+	// Marcadores en 0 
+		mov x1, #24
+		mov x5, #205
+		mov x6, #159
+		movz x10, 0xde, lsl 16
+		movk x10, 0xd3bc, lsl 00
+		BL pintar_circulo 
+		mov x1, #16
+		movz x10, 0x2b, lsl 16
+		movk x10, 0x3536, lsl 00
+		BL pintar_circulo
 
+		mov x1, #24
+		mov x5, #446
+		mov x6, #159
+		movz x10, 0xde, lsl 16
+		movk x10, 0xd3bc, lsl 00
+		BL pintar_circulo 
+		mov x1, #16
+		movz x10, 0x2b, lsl 16
+		movk x10, 0x3536, lsl 00
+		BL pintar_circulo
 /*--------------------*/
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE
