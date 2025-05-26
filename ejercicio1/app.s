@@ -348,22 +348,22 @@ main:
 
 /*---Pintar Letras---*/
 	//Letras E
-	mov x9, #2
-	mov x11, #254
+		mov x9, #2
+		mov x11, #254
 		loop_E:
-			mov x1, #8
-			mov x2, #31
-			mov x3, x11
-			mov x4, #78
-			mov x5, #22
-			movz x10, 0xde, lsl 16
-			movk x10, 0xd3bc, lsl 00
-			BL pintar_E
-			sub x9, x9, #1
-			add x11, x11, #157
-			cbnz x9, loop_E
+		mov x1, #8
+		mov x2, #31
+		mov x3, x11
+		mov x4, #78
+		mov x5, #22
+		movz x10, 0xde, lsl 16
+		movk x10, 0xd3bc, lsl 00
+		BL pintar_E
+		sub x9, x9, #1
+		add x11, x11, #157
+		cbnz x9, loop_E
 		
-		//Letra H
+	//Letra H
 		mov x1, #9
 		mov x2, #29
 		mov x3, #148
@@ -395,6 +395,36 @@ main:
 		movk x10, 0x3536, lsl 00
 		BL pintar_circulo
 
+	//Letra S
+		// Línea superior horizontal
+		mov x1, #20         // Ancho
+		mov x2, #6          // Alto 
+		mov x3, #440        // X
+		mov x4, #78         // Y 
+		movz x10, 0xde, lsl 16
+		movk x10, 0xd3bc, lsl 00
+		BL pintar_rectangulo
+
+		// Línea media horizontal
+		mov x4, #90         // Y
+		BL pintar_rectangulo
+
+		// Línea inferior horizontal
+		mov x4, #103        // Y
+		BL pintar_rectangulo
+
+		// Línea vertical superior
+		mov x1, #6          // Ancho
+		mov x2, #12         // Alto 
+		mov x4, #84         // Y
+		BL pintar_rectangulo
+
+
+		// Línea vertical inferior
+		mov x3, #454        // X
+		mov x4, #96         // Y
+		BL pintar_rectangulo
+
 	// Marcadores en 0 
 		mov x1, #24
 		mov x5, #205
@@ -417,7 +447,10 @@ main:
 		movz x10, 0x2b, lsl 16
 		movk x10, 0x3536, lsl 00
 		BL pintar_circulo
+
+
 /*--------------------*/
+
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE
 
