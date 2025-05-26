@@ -89,6 +89,35 @@ main:
 	mov x3, #282
 	mov x4, #20
 	BL pintar_rectangulo
+
+  /*-Nube 5-*/
+	mov x1, #26
+	mov x2, #12
+	mov x3, #580
+	mov x4, #59
+
+	BL pintar_rectangulo
+
+	mov x1, #42
+	mov x2, #12
+	mov x3, #572
+	mov x4, #70
+	BL pintar_rectangulo
+
+  /*-Nube 6-*/
+	mov x1, #19
+	mov x2, #7
+	mov x3, #511
+	mov x4, #27
+
+	BL pintar_rectangulo
+
+	mov x1, #29
+	mov x2, #7
+	mov x3, #506
+	mov x4, #34
+	BL pintar_rectangulo
+
 /*-Sombras de Nube-*/
    /*-Nube 1-*/
 	movz x10, 0xdf, lsl 16
@@ -120,6 +149,19 @@ main:
 	mov x4, #32
 	BL pintar_rectangulo
 
+   /*-Nube 5-*/
+	mov x1, #42
+	mov x2, #3
+	mov x3, #572
+	mov x4, #82
+	BL pintar_rectangulo
+
+   /*-Nube 6-*/
+	mov x1, #29
+	mov x2, #3
+	mov x3, #506
+	mov x4, #41
+	BL pintar_rectangulo
 
 
 /*---Arboles---*/
