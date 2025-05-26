@@ -425,6 +425,55 @@ main:
 		mov x4, #96         // Y
 		BL pintar_rectangulo
 
+//Letra G
+        // Línea vertical izquierda
+        mov x1, #6          // Ancho
+        mov x2, #31         // Alto
+        mov x3, #360        // X
+        mov x4, #78         // Y
+        BL pintar_rectangulo
+
+        // Línea horizontal superior
+        mov x1, #20         // Ancho
+        mov x2, #6          // Alto
+        BL pintar_rectangulo
+
+        // Línea horizontal inferior
+        mov x4, #103        // Y
+        BL pintar_rectangulo
+
+        // Línea horizontal media
+        mov x1, #12         // Ancho
+        mov x3, #368        // X
+        mov x4, #90         // Y
+        BL pintar_rectangulo
+
+        // Línea vertical derecha (más corta)
+        mov x1, #6          // Ancho
+        mov x2, #14         // Alto
+        mov x3, #374        // X
+        BL pintar_rectangulo
+
+
+    //Letra U
+        // Línea vertical izquierda
+        mov x1, #6          // Ancho
+        mov x2, #27         // Alto
+        mov x3, #385        // X
+        mov x4, #78         // Y
+        BL pintar_rectangulo
+
+        // Línea vertical derecha
+        mov x3, #399        // X
+        BL pintar_rectangulo
+
+        // Línea horizontal inferior
+        mov x1, #20         // Ancho
+        mov x2, #6          // Alto
+        mov x3, #385        // X
+        mov x4, #103        // Y
+        BL pintar_rectangulo
+
 	// Marcadores en 0 
 		mov x1, #24
 		mov x5, #205
