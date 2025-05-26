@@ -349,7 +349,7 @@ main:
 /*---Pintar Letras---*/
 	//Letras E
 		mov x9, #2
-		mov x11, #254
+		mov x11, #243
 		loop_E:
 		mov x1, #8
 		mov x2, #31
@@ -360,7 +360,7 @@ main:
 		movk x10, 0xd3bc, lsl 00
 		BL pintar_E
 		sub x9, x9, #1
-		add x11, x11, #157
+		add x11, x11, #168
 		cbnz x9, loop_E
 		
 	//Letra H
@@ -386,11 +386,11 @@ main:
 		BL pintar_T
 
 	//Letra O 
-		mov x1, #14 
-		mov x5, #195
+		mov x1, #16 
+		mov x5, #193
 		mov x6, #94
 		BL pintar_circulo  
-		mov x1, #8
+		mov x1, #10
 		movz x10, 0x2b, lsl 16
 		movk x10, 0x3536, lsl 00
 		BL pintar_circulo
@@ -454,7 +454,6 @@ main:
         mov x3, #374        // X
         BL pintar_rectangulo
 
-
     //Letra U
         // Línea vertical izquierda
         mov x1, #6          // Ancho
@@ -473,6 +472,45 @@ main:
         mov x3, #385        // X
         mov x4, #103        // Y
         BL pintar_rectangulo
+
+	// letra M
+		mov x1, #6
+		mov x2, #30
+		mov x3, #212
+		mov x4, #78
+		BL pintar_rectangulo
+		mov x3, #233
+		BL pintar_rectangulo
+	//diagonales M 
+		mov x3, #217
+		mov x4, #78
+		mov x1, #3
+		mov x2, #5
+		loop_diag_M:
+    	BL pintar_rectangulo
+    	ADD x3, x3, #1
+    	ADD x4, x4, #1
+
+    	// Verificar si x3 > 68
+    	MOV x5, #224 
+    	CMP x3, x5
+    	BGE end_loop_m     // Si x3 <= 224, salta al final
+
+    	B loop_diag_M         
+		end_loop_m:
+		//fin diag 1
+
+		loop_diag_M2:
+    	BL pintar_rectangulo
+    	ADD x3, x3, #1
+    	SUB x4, x4, #1
+
+    	// Verificar si x3 > 68
+    	MOV x5, #232
+    	CMP x3, x5
+   		BGE end_loop_m2     // Si x3 <= 229, salta al final
+    	B loop_diag_M2          // Repetir bucle si ambas condiciones se cumplen
+		end_loop_m2:
 
 	// Marcadores en 0 
 		mov x1, #24

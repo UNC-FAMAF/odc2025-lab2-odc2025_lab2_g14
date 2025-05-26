@@ -33,6 +33,7 @@ pintar_pixel:
 		ADD SP, SP, 8	
 ret
 
+
 check_pos_in_circle:
     // x3 = X a verificar
     // x4 = Y a verificar
