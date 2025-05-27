@@ -524,8 +524,9 @@ main:
 		movk x10, 0x3536, lsl 00
 		BL pintar_circulo
 
+		//segundo cero:
 		mov x1, #24
-		mov x5, #446
+		mov x5, #436
 		mov x6, #159
 		movz x10, 0xde, lsl 16
 		movk x10, 0xd3bc, lsl 00

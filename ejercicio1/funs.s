@@ -58,7 +58,7 @@ check_pos_in_circle:
     mul x15, x1, x1         // x15 = radio²
     
     cmp x13, x15
-    b.gt fuera_circulo
+    b.ge fuera_circulo
     
     // Si está dentro del círculo, pintar
     bl pintar_pixel
