@@ -535,6 +535,55 @@ main:
 		movk x10, 0x3536, lsl 00
 		BL pintar_circulo
 
+/*-Firma OdC--**/
+    //letra d
+        mov x1, #6 
+        mov x5, #316
+        mov x6, #155
+        movz x10, 0xec, lsl 16
+        movk x10, 0xd226, lsl 00
+        BL pintar_circulo  
+        mov x1, #4
+        movz x10, 0x2b, lsl 16
+        movk x10, 0x3536, lsl 00
+        BL pintar_circulo
+        movz x10, 0xec, lsl 16
+        movk x10, 0xd226, lsl 00
+        mov x1, #3
+        mov x2, #16
+        mov x3, #320
+        mov x4, #146
+        BL pintar_rectangulo
+    // letra o 
+        mov x1, #8 
+        mov x5, #300
+        mov x6, #154
+        BL pintar_circulo  
+        mov x1, #4
+        movz x10, 0x2b, lsl 16
+        movk x10, 0x3536, lsl 00
+        BL pintar_circulo
+    // letra c 
+        mov x1, #3
+        mov x2, #16 
+        mov x3, #326
+        mov x4, #146
+        movz x10, 0xec, lsl 16
+        movk x10, 0xd226, lsl 00
+        BL pintar_rectangulo
+
+        mov x1, #10
+        mov x2, #3
+        mov x3, #326
+        mov x4, #146
+        BL pintar_rectangulo
+        mov x1, #10
+        mov x2, #3
+        mov x3, #326
+        mov x4, #159
+        BL pintar_rectangulo
+
+/*-------*/
 
 /*--------------------*/
 
