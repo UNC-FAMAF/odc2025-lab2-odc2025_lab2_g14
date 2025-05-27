@@ -360,7 +360,7 @@ main:
 		movk x10, 0xd3bc, lsl 00
 		BL pintar_E
 		sub x9, x9, #1
-		add x11, x11, #168
+		add x11, x11, #166
 		cbnz x9, loop_E
 		
 	//Letra H
@@ -377,11 +377,11 @@ main:
 	//Letra T
 		mov x1, #25
 		mov x2, #6
-		mov x3, #466
-		mov x4, #79
-		mov x5,	#29
-		mov x6, #475
-		mov x7, #85
+		mov x3, #459
+		mov x4, #78
+		mov x5,	#31
+		mov x6, #467
+		mov x7, #84
 
 		BL pintar_T
 
@@ -399,7 +399,7 @@ main:
 		// Línea superior horizontal
 		mov x1, #20         // Ancho
 		mov x2, #6          // Alto 
-		mov x3, #440        // X
+		mov x3, #435        // X
 		mov x4, #78         // Y 
 		movz x10, 0xde, lsl 16
 		movk x10, 0xd3bc, lsl 00
@@ -421,7 +421,7 @@ main:
 
 
 		// Línea vertical inferior
-		mov x3, #454        // X
+		mov x3, #449        // X
 		mov x4, #96         // Y
 		BL pintar_rectangulo
 
@@ -526,7 +526,7 @@ main:
 
 		//segundo cero:
 		mov x1, #24
-		mov x5, #436
+		mov x5, #432
 		mov x6, #159
 		movz x10, 0xde, lsl 16
 		movk x10, 0xd3bc, lsl 00
