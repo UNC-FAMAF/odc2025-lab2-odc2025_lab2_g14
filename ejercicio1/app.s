@@ -176,6 +176,29 @@ main:
 
 	BL pintar_rectangulo
 
+	mov x5, #50          // Posición inicial X
+	mov x6, #166         // Posición Y fija
+	mov x1, #60          // Radio del círculo
+	mov x12, #6          // Contador para el bucle (6 árboles)
+
+loop_arboles_fila1:
+	BL pintar_circulo
+	add x5, x5, #110     // Incrementar posición X
+	sub x12, x12, #1     // Decrementar contador
+	cbnz x12, loop_arboles_fila1
+
+	// Segunda fila de árboles
+	mov x6, #116         // Nueva altura Y
+	mov x5, #110         // Posición inicial X
+	mov x1, #35          // Nuevo radio
+	mov x12, #8         // 8 arboles (Se podrian hacer menos si la verdad)
+
+loop_arboles_fila2:
+	BL pintar_circulo
+	add x5, x5, #60      // Incrementar posición X
+	sub x12, x12, #1     // Decrementar contador
+	cbnz x12, loop_arboles_fila2
+
 /*---Pasto---*/
 
 	mov x1, SCREEN_WIDTH
