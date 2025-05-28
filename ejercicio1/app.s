@@ -163,7 +163,6 @@ main:
 	mov x4, #41
 	BL pintar_rectangulo
 
-
 /*---Arboles---*/
 
 	mov x1, SCREEN_WIDTH
@@ -181,7 +180,7 @@ main:
 	mov x1, #60          // Radio del círculo
 	mov x12, #6          // Contador para el bucle (6 árboles)
 
-loop_arboles_fila1:
+	loop_arboles_fila1:
 	BL pintar_circulo
 	add x5, x5, #110     // Incrementar posición X
 	sub x12, x12, #1     // Decrementar contador
@@ -193,7 +192,7 @@ loop_arboles_fila1:
 	mov x1, #35          // Nuevo radio
 	mov x12, #8         // 8 arboles (Se podrian hacer menos si la verdad)
 
-loop_arboles_fila2:
+	loop_arboles_fila2:
 	BL pintar_circulo
 	add x5, x5, #60      // Incrementar posición X
 	sub x12, x12, #1     // Decrementar contador
@@ -300,7 +299,7 @@ loop_arboles_fila2:
 	mov x5, #317
 	mov x6, #428
 	BL pintar_circulo
-/*-----*/
+	/*-----*/
 
 /*---- Fin lineas ---*/
 
@@ -366,8 +365,6 @@ loop_arboles_fila2:
 		movz x10, 0x2b, lsl 16
 		movk x10, 0x3536, lsl 00
 		BL pintar_rectangulo
-
-
 
 /*---Pintar Letras---*/
 	//Letras E
@@ -448,7 +445,7 @@ loop_arboles_fila2:
 		mov x4, #96         // Y
 		BL pintar_rectangulo
 
-//Letra G
+	//Letra G
         // Línea vertical izquierda
         mov x1, #6          // Ancho
         mov x2, #31         // Alto
@@ -535,29 +532,57 @@ loop_arboles_fila2:
     	B loop_diag_M2          // Repetir bucle si ambas condiciones se cumplen
 		end_loop_m2:
 
-	// Marcadores en 0 
-		mov x1, #24
-		mov x5, #205
-		mov x6, #159
-		movz x10, 0xde, lsl 16
-		movk x10, 0xd3bc, lsl 00
-		BL pintar_circulo 
-		mov x1, #16
-		movz x10, 0x2b, lsl 16
-		movk x10, 0x3536, lsl 00
-		BL pintar_circulo
+// Marcadores en 0 
+	mov x1, #22			// Radio del círculo exterior
+	mov x5, #205		// Posición X
+	mov x6, #155		// Posición Y inicial
+	mov x12, #3			// Contador para 3 círculos
+	movz x10, 0xde, lsl 16
+	movk x10, 0xd3bc, lsl 00
 
-		//segundo cero:
-		mov x1, #24
-		mov x5, #432
-		mov x6, #159
-		movz x10, 0xde, lsl 16
-		movk x10, 0xd3bc, lsl 00
-		BL pintar_circulo 
-		mov x1, #16
-		movz x10, 0x2b, lsl 16
-		movk x10, 0x3536, lsl 00
-		BL pintar_circulo
+	loop_marcador1_ext:
+	BL pintar_circulo
+	add x6, x6, #5		// Incrementar Y en 5
+	sub x12, x12, #1
+	cbnz x12, loop_marcador1_ext
+
+	mov x1, #16			// Radio del círculo interior
+	mov x6, #155		// Resetear posición Y
+	mov x12, #3			// Resetear contador
+	movz x10, 0x2b, lsl 16
+	movk x10, 0x3536, lsl 00
+
+	loop_marcador1_int:
+	BL pintar_circulo
+	add x6, x6, #5		// Incrementar Y en 5
+	sub x12, x12, #1
+	cbnz x12, loop_marcador1_int
+
+	// Segundo marcador
+	mov x1, #22			// Radio del círculo exterior
+	mov x5, #432		// Nueva posición X
+	mov x6, #155		// Resetear posición Y
+	mov x12, #3			// Resetear contador
+	movz x10, 0xde, lsl 16
+	movk x10, 0xd3bc, lsl 00
+
+	loop_marcador2_ext:
+	BL pintar_circulo
+	add x6, x6, #5		// Incrementar Y en 5
+	sub x12, x12, #1
+	cbnz x12, loop_marcador2_ext
+
+	mov x1, #16			// Radio del círculo interior
+	mov x6, #155		// Resetear posición Y
+	mov x12, #3			// Resetear contador
+	movz x10, 0x2b, lsl 16
+	movk x10, 0x3536, lsl 00
+
+	loop_marcador2_int:
+	BL pintar_circulo
+	add x6, x6, #5		// Incrementar Y en 5
+	sub x12, x12, #1
+	cbnz x12, loop_marcador2_int
 
 /*-Firma OdC--**/
     //letra d
