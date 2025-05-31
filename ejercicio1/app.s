@@ -365,6 +365,142 @@ main:
 		movz x10, 0x2b, lsl 16
 		movk x10, 0x3536, lsl 00
 		BL pintar_rectangulo
+	
+	//red
+		movz x10, 0x00, lsl 16		//
+		movk x10, 0x0000, lsl 00	// Le asigno el color negro a x10
+
+		mov x9, #218		// uso el x9 como el eje x para las lineas verticales
+		mov x11, #274		// uso el x11 como el eje y para las lineas horizontales
+		mov x12, #22		// uso el x12 como contador para hacer el ciclo
+
+		loop_red:
+			mov x1, #1				// asigno el ancho 
+			mov x2, #109			// asigno el alto
+			mov x3, x9				// asigno el eje x
+			mov x4, #264			// asigno el eje y
+
+			BL pintar_rectangulo	// pinta las lineas verticales de la red
+
+			cmp x12, #13			// comparo al contador con #13
+			B.lt red_if				// si x12 < 13 pinta las lineas horizontales, sino no las pinta, porque son menos que las verticales
+
+			mov x1, #225			// asigno el ancho
+			mov x2, #1				// asigno el alto
+			mov x3, #210			// asigno el eje x
+			mov x4, x11				// asigno el eje y
+
+			BL pintar_rectangulo	// pinta las lineas horizontales
+
+			red_if:
+
+			add x9, x9, #10			// al eje x le sumo 10 píxeles para dibujar todas las lineas verticales de la red
+			add x11, x11, #10		// al eje y le sumo 10 píxeles para dibujar todas las lineas horizontales de la red
+			sub x12, x12, #1		// le resto 1 al contador
+			cbnz x12, loop_red		// si el contador llega a 0, deja de pintar
+
+/*--Copa--*/
+	/*-Base-*/
+		movz x10, 0x4c, lsl 16 // Elijo color
+		movk x10, 0x261a, lsl 00 //  Termino de elegir color
+
+		mov x1, #40  // Ancho
+		mov x2, #5  // Largo
+		mov x3, #299 // eje x
+		mov x4, #201  // eje y
+		BL pintar_rectangulo // Pinto base que estaria en contacto con el piso en un trofeo real
+
+		mov x1, #30  // Ancho
+		mov x2, #14  // Largo
+		mov x3, #304  // eje x
+		mov x4, #188  // eje y
+		BL pintar_rectangulo // Ultimo codigo para pintar la base de color marrón
+	
+	/*-cuerpo-*/
+		movz x10, 0xff, lsl 16 // Elijo color
+		movk x10, 0xff00, lsl 00 //  Termino de elegir color
+
+		mov x1, #26 // Ancho
+		mov x2, #3  // Largo
+		mov x3, #305  // eje x
+		mov x4, #185  // eje y
+		BL pintar_rectangulo
+		
+		mov x1, #20 // Ancho
+		mov x2, #3  // Largo
+		mov x3, #308  // eje x
+		mov x4, #182  // eje y
+		BL pintar_rectangulo
+
+		mov x1, #16 // Ancho
+		mov x2, #3  // Largo
+		mov x3, #311  // eje x
+		mov x4, #179  // eje y
+		BL pintar_rectangulo  // hasta aca se dibuja la parte inferior del trofeo
+
+		mov x1, #6 // Ancho
+		mov x2, #18  // Largo
+		mov x3, #316  // eje x
+		mov x4, #163  // eje y
+		BL pintar_rectangulo  // se dibuja la coneccion entre la parte baja y alta del cuerpo
+
+
+		mov x9, #16 // Ancho
+		mov x11, #311  // eje x
+		mov x12, #162  // eje y
+		mov x13, #4   // restador para el ciclo
+
+		loop_cop:
+		mov x1, x9	// Ancho
+		mov x2, #3	// Largo
+		mov x3, x11   // eje x
+		mov x4, x12   // eje y
+
+		BL pintar_rectangulo // pinta las primera 4 lineas de la base, de la parte alta, del cuerpo.
+
+		add x9, x9, #4  // sumo 4 pixeles al ancho, 2 por lado
+		sub x11, x11, #2   // resto 2 pixeles el punto del eje x, para centralizar
+		sub x12, x12, #3	// resto 3 pixeles que representa el largo de cada linea
+		sub x13, x13, #1	// resto 1 al contador para hacer un total de 4 lineas
+		
+		cbnz x13, loop_cop	// si x13 llega a 0, sale del ciclo
+
+		mov x1, #32 // Ancho
+		mov x2, #6  // Largo
+		mov x3, #303  // eje x
+		mov x4, #147  // eje y
+		BL pintar_rectangulo // sigue dibujando la parte alta del cuerpo
+
+		mov x9, #32 // Ancho
+		mov x11, #3  // Largo
+		mov x12, #303  // eje x
+		mov x13, #144  // eje y
+		mov x14, #0  // contador para el ciclo y ademas se usa para multiplicar a x16 mientras pasa el ciclo
+		mov x15, #3
+
+		loop_cop1:
+		mov x1, x9 // Ancho
+		mov x2, x11  // Largo
+		mov x3, x12  // eje x
+		mov x4, x13  // eje y
+		BL pintar_rectangulo // sigue dibujando la parte alta del cuerpo
+
+		add x14, x14, #1 // aumento 1 al contador
+		add x9, x9, #4	// Ancho = Ancho + 4 (2 pixeles para cada lado)
+		add x11, x11, #3	// Largo = Largo + 3 (por cada reiteracion aumenta el largo por 3 pixeles)
+		sub x12, x12, #2	// x = x - 2 (le resto 2 al eje x para dibujar en otra posicion)
+		mul x16, x14, x15	// guardo en x16: 3 * x14 y sirve para restar el eje 'y' y asi poder aumentar el largo de las lineas
+		sub x13, x13, x16	// resto al eje y lo guardado en x16
+		cmp x14, #6	 // compara al contador (x14) con #6 para dibujar 6 veces
+		B.LT loop_cop1	// si x14 < #6 salta a la etiqueta loop_cop1
+
+		movz x10, 0xc0, lsl 16 // Elijo color
+		movk x10, 0xc0c0, lsl 00 //  Termino de elegir color
+		mov x1, #20  // Ancho
+		mov x2, #6  // Largo
+		mov x3, #309  // eje x
+		mov x4, #192  // eje y
+		BL pintar_rectangulo // Dibuja placa plateada del ganador
 
 /*---Pintar Letras---*/
 	//Letras E
@@ -586,51 +722,148 @@ main:
 
 /*-Firma OdC--**/
     //letra d
-        mov x1, #6 
-        mov x5, #316
-        mov x6, #155
-        movz x10, 0xec, lsl 16
-        movk x10, 0xd226, lsl 00
-        BL pintar_circulo  
-        mov x1, #4
-        movz x10, 0x2b, lsl 16
-        movk x10, 0x3536, lsl 00
-        BL pintar_circulo
-        movz x10, 0xec, lsl 16
-        movk x10, 0xd226, lsl 00
-        mov x1, #3
-        mov x2, #16
-        mov x3, #320
-        mov x4, #146
-        BL pintar_rectangulo
-    // letra o 
-        mov x1, #8 
-        mov x5, #300
-        mov x6, #154
-        BL pintar_circulo  
-        mov x1, #4
-        movz x10, 0x2b, lsl 16
-        movk x10, 0x3536, lsl 00
-        BL pintar_circulo
-    // letra c 
-        mov x1, #3
-        mov x2, #16 
-        mov x3, #326
-        mov x4, #146
-        movz x10, 0xec, lsl 16
-        movk x10, 0xd226, lsl 00
-        BL pintar_rectangulo
+        mov x1, #6 					// asigno el radio del circulo
+        mov x5, #320 				// asigno el eje x del centro del circulo
+        mov x6, #110 				// asigno el eje y del centro del circulo
+        movz x10, 0x00, lsl 16
+        movk x10, 0x0000, lsl 00    // asigno el color negro a x10
+        BL pintar_circulo 			// pinto el circulo de la letra 'd' (circulo completo)
 
-        mov x1, #10
-        mov x2, #3
-        mov x3, #326
-        mov x4, #146
-        BL pintar_rectangulo
-        mov x1, #10
-        mov x2, #3
-        mov x3, #326
-        mov x4, #159
-        BL pintar_rectangulo
+        mov x1, #4 					// asigno el radio del circulo
+        movz x10, 0xff, lsl 16		
+        movk x10, 0xff00, lsl 00	// asigno el color amarillo para que quede igual que el fondo
+        BL pintar_circulo 			// pinto un segundo circulo dentro del primero para que quede un "huueco" en la d
+
+        movz x10, 0x00, lsl 16
+        movk x10, 0x0000, lsl 00	// asigno el color negro a x10
+        mov x1, #3 					// asigno el ancho
+        mov x2, #16 				// asigno el alto
+        mov x3, #324 				// asigno el eje x
+        mov x4, #101 				// asigno el eje y
+        BL pintar_rectangulo		// pinto la unica recta de la 'd'
+
+    // letra c 
+        mov x3, #330 				// asigno el eje x
+        mov x4, #101 				// asigno el eje y
+        BL pintar_rectangulo		// pinto la unica linea vertical de la 'c'
+
+        mov x1, #10 				// asigno el ancho
+        mov x2, #3 					// asigno el alto
+        mov x4, #101 				// asigno el eje y
+        BL pintar_rectangulo		// pinto la linea horizontal superior de la 'c'
+
+        mov x4, #114 				// asigno el eje y
+        BL pintar_rectangulo		// pinto la linea horizontal inferior de la 'c'
+
+    // letra o 
+        mov x1, #8  				// asigno el radio del circulo
+        mov x5, #304 				// asigno el eje x del centro del circulo
+        mov x6, #109 				// asigno el eje y del centro del circulo
+        BL pintar_circulo  			// pinto el circulo completo que va formando la 'c'
+
+        mov x1, #4 			 		// asigno el radio del circulo
+        movz x10, 0xff, lsl 16
+        movk x10, 0xff00, lsl 00	// asigno a x10 el color amarillo para que sea igual al fondo
+        BL pintar_circulo 			// pinto otro circulo en el centro para formar la letra 'o'
+
+// Dibuja el 2025
+		movz x10, 0x00, lsl 16
+		movk x10, 0x0000, lsl 00	// asigno a x10 el color negro
+
+		//variables para el '2'
+			mov x9, #8	// x9 = ancho del 2
+			mov x12, #300	// x12 = posicion inicial eje x
+			mov x13, #124	// x13 = posicion inicial eje y
+			mov x14, #2	// contador/restador para dibujar dos '2'
+
+		//variables para el '0' y el '5'
+			mov x11, #310		//asigna el eje x para el '0' y también se usa para el '5'
+			mov x15, #124		//asigno el eje y para el '5' (lineas horizontales)
+			mov x17, #124		//asigno el eje y para el '5' (lineas verticales)
+
+
+		loop_año:
+			// dibuja las tres lineas horizontales de los '2'
+				mov x1, x9	// asigno el ancho guardado en x9
+				mov x2, #3	// defino el alto
+				mov x3, x12	// asigno el eje x guardado en x12
+				mov x4, #124	// defino la posicion inicial en el eje y
+
+				BL pintar_rectangulo  // pinta la linea horizontal superior del '2'
+
+
+
+				add x4, x4, #6	// muevo la coordenada y 6 pixeles hacia abajo
+
+				BL pintar_rectangulo // pinto la linea horizontal media del '2'
+
+
+				add x4, x4, #6	// muevo nuevamente el eje y 6 pixeles hacia abajo
+
+				BL pintar_rectangulo	// pinto la linea horizontal inferior del '2'
+			
+
+			// dibuja todo el 5 menos la linea horizontal media
+				mov x3, #330			//asigno el eje x
+				mov x4, x15				//asigno el eje y
+
+				BL pintar_rectangulo	//pinta las lineas horizontales superior e inferior del '5'
+
+				mov x1, #3				//asigno el ancho
+				mov x2, #8				//asigno el alto
+				mov x3, x11				//asigno al eje x el mismo que se usó para el numero '2'
+				add x3, x3, #20			//agrego la diferencia para no dibujar lo mismo
+				mov x4, x17				//asigno el eje y
+
+				BL pintar_rectangulo	//pinta las dos lineas verticales del '5'
+
+
+			// dibuja las dos lineas verticales de los '2'
+				mov x1, #3				// reasigno el ancho
+				mov x2, #6				// reasigno el alto
+				add x3, x12, #5			// reasigno la posicion inicial en el eje x
+				mov x4, #124			// reasigno la posicion inicial en el eje y
+			
+				BL pintar_rectangulo	// dibujo la linea vertical superior del '2'
+			
+				mov x3, x12				// reasigno la posicion inicial en el eje x
+				mov x4, #130			// reasigno la posicion inicial en el eje y
+			
+				BL pintar_rectangulo	// dibujo la linea vertical inferior del '2'
+
+
+
+			// dibuja el 0
+				mov x2, #15				// reasigno el alto
+				mov x3, x11				// reasigno la posicion inicial en el eje x
+				mov x4, #124			// reasigno la posicion inicial en el eje y
+				BL pintar_rectangulo	// dibujo las lineas verticales del '0'
+
+				mov x1, #5				// reasigno el ancho
+				mov x2, #3				// reasigno el alto
+				mov x3, #310			// reasigno la posicion inicial en el eje x
+				mov x4, x15				// reasigno la posicion inicial en el eje y
+				BL pintar_rectangulo	// dibujo las lineas horizontales del '0'
+
+				
+
+
+
+			add x11, x11, #5	// sumo 5 al eje x para dibujar lineas verticales distintas
+			add x12, x12, #20	// sumo 22 al eje inicial x para dibujar un segundo '2'
+			add x15, x15, #12	// sumo 12 al eje y para dibujar lineas horizontales del '0' y del '5'
+			add x17, x17, #6	// sumo 6 al eje y para dibujar las lineas verticales del '5'
+			sub x14, x14, #1	// le resto 1 al contador para terminar el ciclo
+			cbnz x14, loop_año	// si x14 = 0 entonces salta a la etiqueta loop_año
+
+			// termino de dibujar la linea horizontal media del '5'
+				mov x1, #8				//reasigno el ancho
+				mov x2, #3				//reasigno el alto
+				mov x3, #330			//reasigno el eje x
+				mov x4, #130			//reasigno el eje y
+
+				BL pintar_rectangulo	//dibujo la linea horizontal media del '5'
+
 
 /*-------*/
 
