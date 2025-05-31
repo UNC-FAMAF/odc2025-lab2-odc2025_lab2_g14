@@ -516,7 +516,7 @@ main:
 		movk x10, 0xd3bc, lsl 00
 		BL pintar_E
 		sub x9, x9, #1
-		add x11, x11, #166
+		add x11, x11, #176
 		cbnz x9, loop_E
 		
 	//Letra H
@@ -533,10 +533,10 @@ main:
 	//Letra T
 		mov x1, #25
 		mov x2, #6
-		mov x3, #459
+		mov x3, #469
 		mov x4, #78
 		mov x5,	#31
-		mov x6, #467
+		mov x6, #477
 		mov x7, #84
 
 		BL pintar_T
@@ -555,7 +555,7 @@ main:
 		// Línea superior horizontal
 		mov x1, #20         // Ancho
 		mov x2, #6          // Alto 
-		mov x3, #435        // X
+		mov x3, #445        // X
 		mov x4, #78         // Y 
 		movz x10, 0xde, lsl 16
 		movk x10, 0xd3bc, lsl 00
@@ -577,7 +577,7 @@ main:
 
 
 		// Línea vertical inferior
-		mov x3, #449        // X
+		mov x3, #459        // X
 		mov x4, #96         // Y
 		BL pintar_rectangulo
 
@@ -585,7 +585,7 @@ main:
         // Línea vertical izquierda
         mov x1, #6          // Ancho
         mov x2, #31         // Alto
-        mov x3, #360        // X
+        mov x3, #370        // X
         mov x4, #78         // Y
         BL pintar_rectangulo
 
@@ -600,32 +600,32 @@ main:
 
         // Línea horizontal media
         mov x1, #12         // Ancho
-        mov x3, #368        // X
+        mov x3, #378        // X
         mov x4, #90         // Y
         BL pintar_rectangulo
 
         // Línea vertical derecha (más corta)
         mov x1, #6          // Ancho
         mov x2, #14         // Alto
-        mov x3, #374        // X
+        mov x3, #384        // X
         BL pintar_rectangulo
 
     //Letra U
         // Línea vertical izquierda
         mov x1, #6          // Ancho
         mov x2, #27         // Alto
-        mov x3, #385        // X
+        mov x3, #395        // X
         mov x4, #78         // Y
         BL pintar_rectangulo
 
         // Línea vertical derecha
-        mov x3, #399        // X
+        mov x3, #409        // X
         BL pintar_rectangulo
 
         // Línea horizontal inferior
         mov x1, #20         // Ancho
         mov x2, #6          // Alto
-        mov x3, #385        // X
+        mov x3, #395        // X
         mov x4, #103        // Y
         BL pintar_rectangulo
 
