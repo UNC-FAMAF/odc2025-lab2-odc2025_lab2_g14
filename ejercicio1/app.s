@@ -36,132 +36,46 @@ main:
   /*-Nube 1-*/
 	movz x10, 0xff, lsl 16
 	movk x10, 0xffff, lsl 00
-
-	mov x1, #39
-	mov x2, #30
-	mov x3, #107
-	mov x4, #18
-
-	BL pintar_rectangulo
-
 	mov x1, #63
 	mov x2, #15
 	mov x3, #95
 	mov x4, #33
-	BL pintar_rectangulo
+	BL pintar_nube
+
   /*-Nube 2-*/
-	mov x1, #19
-	mov x2, #7
-	mov x3, #25
-	mov x4, #35
-
-	BL pintar_rectangulo
-
 	mov x1, #30
 	mov x2, #6
 	mov x3, #20
 	mov x4, #42
-	BL pintar_rectangulo
+	BL pintar_nube
   /*-Nube 3-*/
-	mov x1, #32
-	mov x2, #11
-	mov x3, #46
-	mov x4, #78
-
-	BL pintar_rectangulo
 
 	mov x1, #46
 	mov x2, #6
 	mov x3, #39
 	mov x4, #89
-	BL pintar_rectangulo
+	BL pintar_nube
 
   /*-Nube 4-*/
-	mov x1, #32
-	mov x2, #11
-	mov x3, #290
-	mov x4, #9
-
-	BL pintar_rectangulo
-
 	mov x1, #48
 	mov x2, #12
 	mov x3, #282
 	mov x4, #20
-	BL pintar_rectangulo
+	BL pintar_nube
 
   /*-Nube 5-*/
-	mov x1, #26
-	mov x2, #12
-	mov x3, #580
-	mov x4, #59
-
-	BL pintar_rectangulo
-
 	mov x1, #42
 	mov x2, #12
 	mov x3, #572
 	mov x4, #70
-	BL pintar_rectangulo
+	BL pintar_nube
 
   /*-Nube 6-*/
-	mov x1, #19
-	mov x2, #7
-	mov x3, #511
-	mov x4, #27
-
-	BL pintar_rectangulo
-
 	mov x1, #29
 	mov x2, #7
 	mov x3, #506
 	mov x4, #34
-	BL pintar_rectangulo
-
-/*-Sombras de Nube-*/
-   /*-Nube 1-*/
-	movz x10, 0xdf, lsl 16
-	movk x10, 0xdfdd, lsl 00
-	mov x1, #63
-	mov x2, #3
-	mov x3, #95
-	mov x4, #48
-	BL pintar_rectangulo
-
-   /*-Nube 2-*/
-	mov x1, #30
-	mov x2, #3
-	mov x3, #20
-	mov x4, #48
-	BL pintar_rectangulo
-
-   /*-Nube 3-*/
-	mov x1, #46
-	mov x2, #3
-	mov x3, #39
-	mov x4, #95
-	BL pintar_rectangulo
-
-   /*-Nube 4-*/
-	mov x1, #48
-	mov x2, #3
-	mov x3, #282
-	mov x4, #32
-	BL pintar_rectangulo
-
-   /*-Nube 5-*/
-	mov x1, #42
-	mov x2, #3
-	mov x3, #572
-	mov x4, #82
-	BL pintar_rectangulo
-
-   /*-Nube 6-*/
-	mov x1, #29
-	mov x2, #3
-	mov x3, #506
-	mov x4, #41
-	BL pintar_rectangulo
+	BL pintar_nube
 
 /*---Arboles---*/
 

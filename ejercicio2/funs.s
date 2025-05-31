@@ -3,18 +3,37 @@
 
 //-----Funciones Auxiliares-----///
 
+//Funcion delay para el video:
+
+delay:
+		//x7: duracion del delay
+		SUB SP, SP, 8 										
+		STUR x11,  [SP, 0]
+
+		mov x11, x7  							
+		loop_delay:
+			sub x11, x11, 1
+			cbnz x11, loop_delay
+
+		LDR x11, [SP, 0]					 			
+		ADD SP, SP, 8
+ret
+
 pintar_nube:
 	//PARAMETROS:
 	//x1, x2:  ancho, alto del rectangulo principal (el +largo)
 	//x3, x4: pos x, y 
 	//w10 color 
-	SUB SP, SP, 40
+	SUB SP, SP, 64
 	STUR x9, [SP, 0]
-	STUR X11, [SP, 8]
+	STUR X4, [SP, 8]
 	STUR X12, [SP, 16]
 	STUR X13, [SP, 24]
 	STUR X30, [SP, 32]
-	mov x11, x10 //guarda el color principal
+	STUR X1, [SP, 40]
+	STUR X2, [SP, 48]
+	STUR X3, [SP, 56]
+
 	mov x13, x2 //guardo el alto
 	BL pintar_rectangulo
 
@@ -25,7 +44,8 @@ pintar_nube:
 	add x4, x4, x13 
 	BL pintar_rectangulo //pinta la sombra
 
-	mov x10, x11 //restaura el color principal
+	movz x10, 0xff, lsl 16
+	movk x10, 0xffff, lsl 00
 	lsr x9, x1, #1 //divide en 2 el ancho original
 	sub x1, x1, x9
 	lsr x12, x1, #1 //divido en 2 el nuevo ancho
@@ -36,14 +56,55 @@ pintar_nube:
 	BL pintar_rectangulo //pinta el rectangulo chico
 
 
+	LDR X1, [SP, 40]
+	LDR X2, [SP, 48]
+	LDR X3, [SP, 56]
 	LDR X9, [SP, 0]
-	LDR X11, [SP, 8]
+	LDR X4, [SP, 8]
 	LDR X12, [SP, 16]
 	LDR X13, [SP, 24]
 	LDR X30, [SP, 32]
-	ADD SP, SP, 40
+	ADD SP, SP, 64
 ret 
 
+borrar_nube: 
+	SUB SP, SP, 16
+	STUR X30, [SP, 0]
+	STUR X10, [SP, 8]
+	//parametros:
+	//x1, x2: ancho, alto
+	//x3, x4 pos x, y 
+	movz x10, 0x83, lsl 16 // Elijo color
+	movk x10, 0xb6c1, lsl 00 //  Termino de elegir color: 0x79bacc
+	sub x4, x4, x2 
+	add x2, x2, x2
+	add x2, x2, #3 
+	BL pintar_rectangulo 
+	LDR X30, [SP, 0]
+	LDR X10, [SP, 8]
+	ADD SP, SP, 8
+	
+ret 
+
+incrementar_posX:
+    sub sp, sp, #24         // Reservar espacio en pila
+    stur x30, [sp, #0]     // Guardar registro de retorno
+	stur x1, [sp, #8]
+	stur x2, [sp, #16]
+
+    LDR W1, [x0]      // Cargar posX (tercer .word)
+    ADD W1, W1, #1        // Incrementar X
+    MOV W2, SCREEN_WIDTH
+    CMP W1, W2
+    B.LT no_reset
+    MOV W1, #0            // Reiniciar a X=0 si sale de pantalla
+no_reset:
+    STUR W1, [x0]      // Guardar nueva posX
+	ldur x2, [sp, #16]
+	ldur x1, [sp, #8]
+    ldur x30, [sp, #0]     // Restaurar registro de retorno
+    add sp, sp, #24       // Liberar pila
+ret
 
 calcular_posicion:
 	//Direccion = Direccion de inicio + 4*[x+(y*640)]

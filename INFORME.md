@@ -1,8 +1,8 @@
 ### Nombre y apellido 
-Integrante 1: Santiago Issetta | DNI: 46450747
-Integrante 2: Maximiliano Tomás Castelle | DNI: 43812258
-Integrante 3: Tomás Agustín Castro | DNI: 46033073
-Integrante 4: Fernando Agustín Lara | DNI: 44346500
+- Integrante 1: Santiago Issetta | DNI: 46450747
+- Integrante 2: Maximiliano Tomás Castelle | DNI: 43812258
+- Integrante 3: Tomás Agustín Castro | DNI: 46033073
+- Integrante 4: Fernando Agustín Lara | DNI: 44346500
 
 
 ### Descripción ejercicio 1: 
