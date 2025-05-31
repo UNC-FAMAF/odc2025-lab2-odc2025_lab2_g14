@@ -7,14 +7,15 @@
 	.equ GPIO_GPLEV0,    0x34
 
 	.data
-	// Estructura para cada nube: [ancho, alto, posX, posY]
+	// Posicion INICIAL en eje x de cada nube
 		nube1:  .dword 95   // Nube 1
 		nube2:  .dword 20   // Nube 2
 		nube3:  .dword 39  // Nube 3 (descomentar si se usa)
 		nube4:  .dword 282   // Nube 4
 		nube5:  .dword 572   // Nube 5
 		nube6:  .dword 506   // Nube 6
-		delay_value_nubes: .dword 9999999
+		delay_value_nubes: .dword 15500000 //delay para anmimacion nubes
+
 	//Incluyo archivo con funciones auxiliares
 	.include "funs.s"
 
@@ -40,7 +41,6 @@ main:
 	cbnz x1,loop0  // Si no terminó la fila, salto
 	sub x2,x2,1	   // Decrementar contador Y
 	cbnz x2,loop1  // Si no es la última fila, salto
-
 
 /*---Arboles---*/
 
@@ -742,63 +742,54 @@ main:
 				mov x4, #130			//reasigno el eje y
 
 				BL pintar_rectangulo	//dibujo la linea horizontal media del '5'
-
-
 /*-------*/
-/*---Nubes---*/
-	movz x10, 0xff, lsl 16
-	movk x10, 0xffff, lsl 00
 
 /*---Nubes---*/
  
-
 loop_nubes:
 	movz x10, 0xff, lsl 16
 	movk x10, 0xffff, lsl 00
-  /*-Nube 1-*/
-	mov x1, #63
-	mov x2, #15
-	ldr x3, =nube1
-	ldr x3, [x3]
-	mov x4, #33
-	BL pintar_nube
 
   /*-Nube 2-*/
 	mov x1, #30
 	mov x2, #6
-	ldr x3, =nube2
-	ldr x3, [x3]
+	ldr x3, nube2
+	
 	mov x4, #42
 	BL pintar_nube
+  /*-Nube 6-*/
+	mov x1, #29
+	mov x2, #7
+	ldr x3, nube6
+	
+	mov x4, #34
+	BL pintar_nube
 
+  /*-Nube 1-*/
+	mov x1, #63
+	mov x2, #15
+	ldr x3, nube1
+	mov x4, #33
+	BL pintar_nube
 
   /*-Nube 4-*/
 	mov x1, #48
 	mov x2, #12
-	ldr x3, =nube4
-	ldr x3, [x3]
+	ldr x3, nube4
 	mov x4, #20
 	BL pintar_nube
 
   /*-Nube 5-*/
 	mov x1, #42
 	mov x2, #12
-	ldr x3, =nube5
-	ldr x3, [x3]
+	ldr x3, nube5
 	mov x4, #20
-	BL pintar_nube
-
-  /*-Nube 6-*/
-	mov x1, #29
-	mov x2, #7
-	ldr x3, =nube6
-	ldr x3, [x3]
-	mov x4, #34
 	BL pintar_nube
 
 	ldr x7, delay_value_nubes
 	BL delay
 	
+	//ESTO BORRA LAS NUBES EN C/ITERACION:
 	mov x1, SCREEN_WIDTH
 	mov x2, #56
 	mov x3, #0
@@ -807,19 +798,18 @@ loop_nubes:
 	movk x10, 0xb6c1, lsl 00
 	BL pintar_rectangulo
  
- 
+	//Incrementar pos x de c/nube:
 	ldr x0, =nube1
+	mov x8, #2
+	bl incrementar_posX
+	ldr x0, =nube4
+	bl incrementar_posX
+	ldr x0, =nube5
 	bl incrementar_posX
 	
 	ldr x0, =nube2
+	mov x8, #1
 	bl incrementar_posX
-	
-	ldr x0, =nube4
-	bl incrementar_posX
-	
-	ldr x0, =nube5
-	bl incrementar_posX
-
 	ldr x0, =nube6
 	bl incrementar_posX
 b loop_nubes

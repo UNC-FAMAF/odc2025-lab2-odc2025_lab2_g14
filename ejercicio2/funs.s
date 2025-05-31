@@ -87,13 +87,15 @@ borrar_nube:
 ret 
 
 incrementar_posX:
-    sub sp, sp, #24         // Reservar espacio en pila
+	//parametros: x0: pos x en memoria de la nube
+	// x8: cuanto avanza
+    sub sp, sp, #32         // Reservar espacio en pila
     stur x30, [sp, #0]     // Guardar registro de retorno
 	stur x1, [sp, #8]
 	stur x2, [sp, #16]
-
+	stur x8, [sp, #24]
     LDR W1, [x0]      // Cargar posX (tercer .word)
-    ADD W1, W1, #1        // Incrementar X
+    ADD W1, W1, W8        // Incrementar X
     MOV W2, SCREEN_WIDTH
     CMP W1, W2
     B.LT no_reset
@@ -103,6 +105,7 @@ no_reset:
 	ldur x2, [sp, #16]
 	ldur x1, [sp, #8]
     ldur x30, [sp, #0]     // Restaurar registro de retorno
+	ldur x8, [sp, #24]
     add sp, sp, #24       // Liberar pila
 ret
 
