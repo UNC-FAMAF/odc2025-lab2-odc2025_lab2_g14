@@ -15,6 +15,7 @@
 		nube5:  .dword 572   // Nube 5
 		nube6:  .dword 506   // Nube 6
 		delay_value_nubes: .dword 15500000 //delay para anmimacion nubes
+		delay_value_marcador: .dword 2800000000 //delay para animacion marcador
 
 	//Incluyo archivo con funciones auxiliares
 	.include "funs.s"
@@ -573,7 +574,7 @@ main:
 	sub x12, x12, #1
 	cbnz x12, loop_marcador1_int
 
-	// Segundo marcador
+// Segundo marcador
 	mov x1, #22			// Radio del círculo exterior
 	mov x5, #432		// Nueva posición X
 	mov x6, #155		// Resetear posición Y
@@ -744,6 +745,31 @@ main:
 				BL pintar_rectangulo	//dibujo la linea horizontal media del '5'
 /*-------*/
 
+/*--- Cambiar el marcador de HOME de 0 a 1---*/
+
+// Delay de 3 segundos
+	ldr x7, delay_value_marcador
+	BL delay
+
+//Borro el 0
+	mov x1, #66
+	mov x2, #66
+	mov x3, #180
+	mov x4, #130
+	movz x10, 0x2b, lsl 16
+	movk x10, 0x3536, lsl 00
+	BL pintar_rectangulo
+
+// Pinto el 1
+	// Rectangulo vertical del 1
+		mov x1, #12
+		mov x2, #50
+		mov x3, #195
+		mov x4, #138
+		movz x10, 0xde, lsl 16
+		movk x10, 0xd3bc, lsl 00
+		BL pintar_rectangulo	
+		
 /*---Nubes---*/
  
 loop_nubes:
