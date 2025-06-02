@@ -15,7 +15,7 @@
 		nube5:  .dword 572   // Nube 5
 		nube6:  .dword 506   // Nube 6
 		delay_value_nubes: .dword 15500000 //delay para anmimacion nubes
-		delay_value_marcador: .dword 2800000000 //delay para animacion marcador
+		delay_value_marcador: .dword 2800000000 //delay para animacion marcador
 
 	//Incluyo archivo con funciones auxiliares
 	.include "funs.s"
@@ -745,33 +745,10 @@ main:
 				BL pintar_rectangulo	//dibujo la linea horizontal media del '5'
 /*-------*/
 
-/*--- Cambiar el marcador de HOME de 0 a 1---*/
 
-// Delay de 3 segundos
-	ldr x7, delay_value_marcador
-	BL delay
-
-//Borro el 0
-	mov x1, #66
-	mov x2, #66
-	mov x3, #180
-	mov x4, #130
-	movz x10, 0x2b, lsl 16
-	movk x10, 0x3536, lsl 00
-	BL pintar_rectangulo
-
-// Pinto el 1
-	// Rectangulo vertical del 1
-		mov x1, #12
-		mov x2, #50
-		mov x3, #195
-		mov x4, #138
-		movz x10, 0xde, lsl 16
-		movk x10, 0xd3bc, lsl 00
-		BL pintar_rectangulo	
-		
 /*---Nubes---*/
  
+mov x9, #0 
 loop_nubes:
 	movz x10, 0xff, lsl 16
 	movk x10, 0xffff, lsl 00
@@ -812,6 +789,28 @@ loop_nubes:
 	mov x4, #20
 	BL pintar_nube
 
+	//codigo para el marcador
+	add x9, x9, #1
+	cmp x9, delay_value_marcador //si no paso el tiempo, no suma el marcador
+	b.ne skip_marcador 
+	//Borro el 0
+	mov x1, #66
+	mov x2, #66
+	mov x3, #180
+	mov x4, #130
+	movz x10, 0x2b, lsl 16
+	movk x10, 0x3536, lsl 00
+	BL pintar_rectangulo
+	// Pinto el 1
+	// Rectangulo vertical del 1
+		mov x1, #12
+		mov x2, #50
+		mov x3, #195
+		mov x4, #138
+		movz x10, 0xde, lsl 16
+		movk x10, 0xd3bc, lsl 00
+		BL pintar_rectangulo	
+skip_marcador:
 	ldr x7, delay_value_nubes
 	BL delay
 	
@@ -839,7 +838,6 @@ loop_nubes:
 	ldr x0, =nube6
 	bl incrementar_posX
 b loop_nubes
-
 /*--------------------*/
 
 	// Ejemplo de uso de gpios
