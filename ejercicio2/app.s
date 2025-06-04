@@ -15,7 +15,9 @@
 		nube5:  .dword 572   // Nube 5
 		nube6:  .dword 506   // Nube 6
 		delay_value_nubes: .dword 15500000 //delay para anmimacion nubes
-		delay_value_marcador: .dword 2800000000 //delay para animacion marcador
+		delay_value_marcador: .dword 5800000000 //delay para animacion marcador
+		pelota_x: .dword 480
+		pelota_y: .dword 530
 
 	//Incluyo archivo con funciones auxiliares
 	.include "funs.s"
@@ -90,124 +92,8 @@ main:
 
 	BL pintar_rectangulo
 
-	mov x1, SCREEN_WIDTH
-	mov x2, #104
-	mov x3, #0
-	mov x4, #376
-	movz x10, 0x59, lsl 16
-	movk x10, 0x803a, lsl 00
-
-	BL pintar_rectangulo
  
-/*----- lineas de la cancha -------*/
-
-	// linea del fondo
-	mov x1, SCREEN_WIDTH
-	mov x2,	#5
-	mov x3,	#0
-	mov x4,	#373
-	movz x10, 0xf5, lsl 16
-	movk x10, 0xf2ce, lsl 00
-
-	BL pintar_rectangulo
-
-	// linea horiz. área chica
-	mov x1, #498
-	mov x3, #68
-	mov x4, #400
-	BL pintar_rectangulo
-
-	//linea diagonal izq. área chica:
-	mov x1, #4
-	mov x2, #4
-	mov x3, #92
-	mov x4, #375
-
-	loop_diag:
-    BL pintar_rectangulo
-    SUB x3, x3, #1
-    ADD x4, x4, #1
-
-    // Verificar si x3 > 68
-    MOV x5, #67
-    CMP x3, x5
-    BLE end_loop     // Si x3 <= 68, salta al final
-
-    // Verificar si x4 < 400
-    MOV x6, #400
-    CMP x4, x6
-    BGE end_loop     // Si x4 >= 400, salta al final
-
-    B loop_diag          // Repetir bucle si ambas condiciones se cumplen
-	end_loop:
-
-	//linea diagonal der. area chica:
-	mov x3, #537
-	mov x4, #375
-
-	loop_diag2:
-    BL pintar_rectangulo
-    ADD x3, x3, #1
-    ADD x4, x4, #1
-
-    // Verificar si x3 > 68
-    MOV x5, #566
-    CMP x3, x5
-    BGE end_loop2     // Si x3 <= 68, salta al final
-
-    // Verificar si x4 < 400
-    MOV x6, #400
-    CMP x4, x6
-    BGE end_loop2     // Si x4 >= 400, salta al final
-
-    B loop_diag2          // Repetir bucle si ambas condiciones se cumplen
-	end_loop2:
-
-	//sombra bajo palos
-	mov x1, #230
-	mov x2, #5
-	mov x3, #205
-	mov x4, #373
-	movz x10, 0xac, lsl 16
-	movk x10, 0xaa8d, lsl 00
-	BL pintar_rectangulo
-
-/*-- Punto penal --*/
-	mov x1, #6
-	movz x10, 0xf5, lsl 16
-	movk x10, 0xf2ce, lsl 00
-	mov x5, #317
-	mov x6, #428
-	BL pintar_circulo
-	/*-----*/
-
-/*---- Fin lineas ---*/
-
-/*---Arco---*/ 
-
-	// travesaño
-	mov x1, #243
-	mov x2, #8
-	mov x3, #201
-	mov x4, #256
-	
-	movz x10, 0xde, lsl 16
-	movk x10, 0xd3bc, lsl 00
-
-	BL pintar_rectangulo
-
-	//poste izquierdo
-	mov x1, #9
-	mov x2, #122
-	mov x3, #201
-	BL pintar_rectangulo
-
-	//poste derecho
-	mov x3, #435
-	BL pintar_rectangulo
-
-/*----Tablero----*/
-	
+/*TABLERO */
 	//patas
 		mov x9, #166
 		mov x11, #219
@@ -245,41 +131,7 @@ main:
 		movz x10, 0x2b, lsl 16
 		movk x10, 0x3536, lsl 00
 		BL pintar_rectangulo
-	
-	//red
-		movz x10, 0x00, lsl 16		//
-		movk x10, 0x0000, lsl 00	// Le asigno el color negro a x10
-
-		mov x9, #218		// uso el x9 como el eje x para las lineas verticales
-		mov x11, #274		// uso el x11 como el eje y para las lineas horizontales
-		mov x12, #22		// uso el x12 como contador para hacer el ciclo
-
-		loop_red:
-			mov x1, #1				// asigno el ancho 
-			mov x2, #109			// asigno el alto
-			mov x3, x9				// asigno el eje x
-			mov x4, #264			// asigno el eje y
-
-			BL pintar_rectangulo	// pinta las lineas verticales de la red
-
-			cmp x12, #13			// comparo al contador con #13
-			B.lt red_if				// si x12 < 13 pinta las lineas horizontales, sino no las pinta, porque son menos que las verticales
-
-			mov x1, #225			// asigno el ancho
-			mov x2, #1				// asigno el alto
-			mov x3, #210			// asigno el eje x
-			mov x4, x11				// asigno el eje y
-
-			BL pintar_rectangulo	// pinta las lineas horizontales
-
-			red_if:
-
-			add x9, x9, #10			// al eje x le sumo 10 píxeles para dibujar todas las lineas verticales de la red
-			add x11, x11, #10		// al eje y le sumo 10 píxeles para dibujar todas las lineas horizontales de la red
-			sub x12, x12, #1		// le resto 1 al contador
-			cbnz x12, loop_red		// si el contador llega a 0, deja de pintar
-
-/*--Copa--*/
+	/*--Copa--*/
 	/*-Base-*/
 		movz x10, 0x4c, lsl 16 // Elijo color
 		movk x10, 0x261a, lsl 00 //  Termino de elegir color
@@ -724,18 +576,13 @@ main:
 				mov x3, #310			// reasigno la posicion inicial en el eje x
 				mov x4, x15				// reasigno la posicion inicial en el eje y
 				BL pintar_rectangulo	// dibujo las lineas horizontales del '0'
-
-				
-
-
-
+		
 			add x11, x11, #5	// sumo 5 al eje x para dibujar lineas verticales distintas
 			add x12, x12, #20	// sumo 22 al eje inicial x para dibujar un segundo '2'
 			add x15, x15, #12	// sumo 12 al eje y para dibujar lineas horizontales del '0' y del '5'
 			add x17, x17, #6	// sumo 6 al eje y para dibujar las lineas verticales del '5'
 			sub x14, x14, #1	// le resto 1 al contador para terminar el ciclo
 			cbnz x14, loop_año	// si x14 = 0 entonces salta a la etiqueta loop_año
-
 			// termino de dibujar la linea horizontal media del '5'
 				mov x1, #8				//reasigno el ancho
 				mov x2, #3				//reasigno el alto
@@ -743,13 +590,168 @@ main:
 				mov x4, #130			//reasigno el eje y
 
 				BL pintar_rectangulo	//dibujo la linea horizontal media del '5'
-/*-------*/
+		
+/*---fin tablero----*/
 
+/*--Red del arco--*/
+movz x10, 0x00, lsl 16		//
+		movk x10, 0x0000, lsl 00	// Le asigno el color negro a x10
+
+		mov x9, #218		// uso el x9 como el eje x para las lineas verticales
+		mov x11, #274		// uso el x11 como el eje y para las lineas horizontales
+		mov x12, #22		// uso el x12 como contador para hacer el ciclo
+
+		loop_red:
+			mov x1, #1				// asigno el ancho 
+			mov x2, #100			// asigno el alto
+			mov x3, x9				// asigno el eje x
+			mov x4, #264			// asigno el eje y
+
+			BL pintar_rectangulo	// pinta las lineas verticales de la red
+
+			cmp x12, #13			// comparo al contador con #13
+			B.lt red_if				// si x12 < 13 pinta las lineas horizontales, sino no las pinta, porque son menos que las verticales
+
+			mov x1, #225			// asigno el ancho
+			mov x2, #1				// asigno el alto
+			mov x3, #210			// asigno el eje x
+			mov x4, x11				// asigno el eje y
+
+			BL pintar_rectangulo	// pinta las lineas horizontales
+
+			red_if:
+
+			add x9, x9, #10			// al eje x le sumo 10 píxeles para dibujar todas las lineas verticales de la red
+			add x11, x11, #10		// al eje y le sumo 10 píxeles para dibujar todas las lineas horizontales de la red
+			sub x12, x12, #1		// le resto 1 al contador
+			cbnz x12, loop_red		// si el contador llega a 0, deja de pintar
+
+/*-FIN RED*/
+
+mov x9, #0 
+loop_animacion:
+	mov x1, SCREEN_WIDTH
+	mov x2, #104
+	mov x3, #0
+	mov x4, #376
+	movz x10, 0x59, lsl 16
+	movk x10, 0x803a, lsl 00
+	BL pintar_rectangulo
+/*----- lineas de la cancha -------*/
+
+	// linea del fondo
+	mov x1, SCREEN_WIDTH
+	mov x2,	#5
+	mov x3,	#0
+	mov x4,	#373
+	movz x10, 0xf5, lsl 16
+	movk x10, 0xf2ce, lsl 00
+
+	BL pintar_rectangulo
+
+	// linea horiz. área chica
+	mov x1, #498
+	mov x3, #68
+	mov x4, #400
+	BL pintar_rectangulo
+
+	//linea diagonal izq. área chica:
+	mov x1, #4
+	mov x2, #4
+	mov x3, #92
+	mov x4, #375
+
+	loop_diag:
+    BL pintar_rectangulo
+    SUB x3, x3, #1
+    ADD x4, x4, #1
+
+    // Verificar si x3 > 68
+    MOV x5, #67
+    CMP x3, x5
+    BLE end_loop     // Si x3 <= 68, salta al final
+
+    // Verificar si x4 < 400
+    MOV x6, #400
+    CMP x4, x6
+    BGE end_loop     // Si x4 >= 400, salta al final
+
+    B loop_diag          // Repetir bucle si ambas condiciones se cumplen
+	end_loop:
+
+	//linea diagonal der. area chica:
+	mov x3, #537
+	mov x4, #375
+
+	loop_diag2:
+    BL pintar_rectangulo
+    ADD x3, x3, #1
+    ADD x4, x4, #1
+
+    // Verificar si x3 > 68
+    MOV x5, #566
+    CMP x3, x5
+    BGE end_loop2     // Si x3 <= 68, salta al final
+
+    // Verificar si x4 < 400
+    MOV x6, #400
+    CMP x4, x6
+    BGE end_loop2     // Si x4 >= 400, salta al final
+
+    B loop_diag2          // Repetir bucle si ambas condiciones se cumplen
+	end_loop2:
+
+	//sombra bajo palos
+	mov x1, #230
+	mov x2, #5
+	mov x3, #205
+	mov x4, #373
+	movz x10, 0xac, lsl 16
+	movk x10, 0xaa8d, lsl 00
+	BL pintar_rectangulo
+
+/*-- Punto penal --*/
+	mov x1, #6
+	movz x10, 0xf5, lsl 16
+	movk x10, 0xf2ce, lsl 00
+	mov x5, #317
+	mov x6, #428
+	BL pintar_circulo
+	/*-----*/
+
+/*---- Fin lineas ---*/
+
+/*---Arco---*/ 
+
+	// travesaño
+	mov x1, #243
+	mov x2, #8
+	mov x3, #201
+	mov x4, #256
+	movz x10, 0xde, lsl 16
+	movk x10, 0xd3bc, lsl 00
+	BL pintar_rectangulo
+
+	//poste izquierdo
+	mov x1, #9
+	mov x2, #122
+	mov x3, #201
+	BL pintar_rectangulo
+	//poste derecho
+	mov x3, #435
+	BL pintar_rectangulo
+
+	sub sp, sp, 16
+	stur x9, [sp, #0]
+	stur x11, [sp, #8]
+	//red
+		
+	ldur x11, [sp, #8]
+	ldur x9, [sp, #0]
+	add sp, sp, 16
 
 /*---Nubes---*/
  
-mov x9, #0 
-loop_nubes:
 	movz x10, 0xff, lsl 16
 	movk x10, 0xffff, lsl 00
 
@@ -757,7 +759,6 @@ loop_nubes:
 	mov x1, #30
 	mov x2, #6
 	ldr x3, nube2
-	
 	mov x4, #42
 	BL pintar_nube
   /*-Nube 6-*/
@@ -788,6 +789,30 @@ loop_nubes:
 	ldr x3, nube5
 	mov x4, #20
 	BL pintar_nube
+
+	/*--  pelota --*/
+	ldr x5, pelota_x
+	ldr x6, pelota_y
+	cmp x6, 369
+	b.lt skip_pelota  //si la pelota ya llego a pos final, se detiene
+	BL pintar_pelota
+	ldr x0, =pelota_x
+	ldr x1, =pelota_y
+	mov x8, #3
+	BL decrementar_pos_pelota
+
+skip_pelota:
+	//pinto pequeño rectangulo del color del pasto p/eliminar trazo
+	mov x1, #225
+	mov x2, #9
+	mov x3, #210
+	mov x4,	#365
+	movz x10, 0x91, lsl 16
+	movk x10, 0xab49, lsl 00
+	BL pintar_rectangulo
+	/*-----*/
+
+	BL pintar_pelota //pinto la posicion final de la pelota
 
 	//codigo para el marcador
 	add x9, x9, #1
@@ -837,31 +862,7 @@ skip_marcador:
 	bl incrementar_posX
 	ldr x0, =nube6
 	bl incrementar_posX
-b loop_nubes
-/*--------------------*/
 
-	// Ejemplo de uso de gpios
-	mov x9, GPIO_BASE
+b loop_animacion
 
-	// Atención: se utilizan registros w porque la documentación de broadcom
-	// indica que los registros que estamos leyendo y escribiendo son de 32 bits
-
-	// Setea gpios 0 - 9 como lectura
-	str wzr, [x9, GPIO_GPFSEL0]
-
-	// Lee el estado de los GPIO 0 - 31
-	ldr w10, [x9, GPIO_GPLEV0]
-
-	// And bit a bit mantiene el resultado del bit 2 en w10
-	and w11, w10, 0b10
-
-	// w11 será 1 si había un 1 en la posición 2 de w10, si no será 0
-	// efectivamente, su valor representará si GPIO 2 está activo
-	lsr w11, w11, 1
-
-	//---------------------------------------------------------------
-	// Infinite Loop
-
-InfLoop:
-	b InfLoop
 

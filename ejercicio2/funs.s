@@ -19,6 +19,27 @@ delay:
 		ADD SP, SP, 8
 ret
 
+pintar_pelota:
+	sub sp, sp, 16
+	stur x30, [sp, 0]
+	stur x1, [sp, 8]
+	//parámetros: 
+	//x5, x6: centro x, centro y
+	movz x10, 0x00, lsl 16 // Elijo color
+	movk x10, 0x0000, lsl 00 //  Termino de elegir color
+	mov x1, #10
+
+	BL pintar_circulo
+	movz x10, 0xff, lsl 16 // Elijo color
+	movk x10, 0xffff, lsl 00 //  Termino de elegir color
+	mov x1, #8
+	BL pintar_circulo
+	ldur x30, [sp, 0]
+	ldur x1, [sp, 8]
+	add sp, sp, 16
+
+ret
+
 pintar_nube:
 	//PARAMETROS:
 	//x1, x2:  ancho, alto del rectangulo principal (el +largo)
@@ -104,6 +125,27 @@ no_reset:
     STUR W1, [x0]      // Guardar nueva posX
 	ldur x2, [sp, #16]
 	ldur x1, [sp, #8]
+    ldur x30, [sp, #0]     // Restaurar registro de retorno
+	ldur x8, [sp, #24]
+    add sp, sp, #24       // Liberar pila
+ret
+
+decrementar_pos_pelota:
+	//parametros: x0, x1: pos x,y en memoria de la pelota
+	// x8: cuanto avanza
+    sub sp, sp, #32         // Reservar espacio en pila
+    stur x30, [sp, #0]     // Guardar registro de retorno
+	stur x12, [sp, #8]    
+	stur x13, [sp, #16]
+	stur x8, [sp, #24]
+    LDR x12, [x0]      // Cargar posX ( .dword)
+	LDR x13, [x1]      //cargar posY
+    sub x12, x12, #4        // Incrementar X
+	sub x13, x13, x8
+    STUR x12, [x0]      // Guardar nueva posX
+	STUR x13, [x1]
+	ldur x13, [sp, #16]
+	ldur x12, [sp, #8]
     ldur x30, [sp, #0]     // Restaurar registro de retorno
 	ldur x8, [sp, #24]
     add sp, sp, #24       // Liberar pila
@@ -461,4 +503,3 @@ pintar_T:
     LDR x30, [SP, 64]
     ADD SP, SP, 80
 ret
-
