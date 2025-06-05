@@ -130,26 +130,82 @@ no_reset:
     add sp, sp, #24       // Liberar pila
 ret
 
-decrementar_pos_pelota:
-	//parametros: x0, x1: pos x,y en memoria de la pelota
-	// x8: cuanto avanza
-    sub sp, sp, #32         // Reservar espacio en pila
-    stur x30, [sp, #0]     // Guardar registro de retorno
-	stur x12, [sp, #8]    
-	stur x13, [sp, #16]
-	stur x8, [sp, #24]
-    LDR x12, [x0]      // Cargar posX ( .dword)
-	LDR x13, [x1]      //cargar posY
-    sub x12, x12, #4        // Incrementar X
-	sub x13, x13, x8
-    STUR x12, [x0]      // Guardar nueva posX
-	STUR x13, [x1]
-	ldur x13, [sp, #16]
-	ldur x12, [sp, #8]
-    ldur x30, [sp, #0]     // Restaurar registro de retorno
-	ldur x8, [sp, #24]
-    add sp, sp, #24       // Liberar pila
+trayectoria_rebote:
+    sub sp, sp, 40         // Reservar espacio en pila
+    stur x30, [sp, 0]      // Guardar registro de retorno
+    stur x12, [sp, 8]    
+    stur x13, [sp, 16]
+    stur x8, [sp, 24]
+	stur x15, [sp, 32]
+    LDR x12, [x0]           // Cargar posX
+    LDR x13, [x1]           // Cargar posY
+
+	ldr x15, [x2]
+
+	cmp x12, #60
+	b.lt fin_rebote
+
+    cmp x12, #213
+    b.lt rebote             // Si x12 < 210, salta a rebote
+
+    // Movimiento normal
+    sub x12, x12, #4
+    sub x13, x13, x8
+    STUR x12, [x0]          // Guardar nueva posX
+    STUR x13, [x1]
+    b fin                   // Salta al final, evitando ejecutar rebote
+
+rebote:
+    sub x12, x12, #2
+    add x13, x13, #2
+    STUR x12, [x0]
+    STUR x13, [x1]
+	b fin
+
+fin_rebote:
+	mov x15, #1
+	stur x15, [x2]
+
+fin:
+    LDUR x13, [sp, 16]
+    LDUR x12, [sp, 8]
+    LDUR x30, [sp, 0]
+    LDUR x8, [sp, 24]
+	LDUR x15, [sp, 32]
+    add sp, sp, 40
+
 ret
+
+trayectoria_gol:
+    // Parámetros: 
+    // x0: dirección de pelota_x en memoria
+    // x1: dirección de pelota_y en memoria
+    // x8: cantidad a incrementar en Y
+    
+    sub sp, sp, 32         // Reservar espacio para 4 registros (32 bytes)
+    stur x30, [sp, 0]      // Guardar registro de retorno
+    stur x12, [sp, 8]      // Guardar registros que usaremos
+    stur x13, [sp, 16]
+    stur x8, [sp, 24]      // Guardar x8 (valor del incremento)
+    
+    LDR x12, [x0]           // Cargar posX actual
+    LDR x13, [x1]           // Cargar posY actual
+    
+    add x12, x12, #4        // incrementar X (movimiento horizontal)
+    sub x13, x13, x8        // decrementar Y (movimiento vertical)
+    
+    STUR x12, [x0]           // Guardar nueva posX
+    STUR x13, [x1]           // Guardar nueva posY
+    
+
+    // Restaurar registros
+    ldur x8, [sp, 24]
+    ldur x13, [sp, 16]
+    ldur x12, [sp, 8]
+    ldur x30, [sp, 0]      // Restaurar registro de retorno
+    add sp, sp, 32         // Liberar espacio correctamente
+
+ret                     // Retornar (en línea separada)
 
 calcular_posicion:
 	//Direccion = Direccion de inicio + 4*[x+(y*640)]

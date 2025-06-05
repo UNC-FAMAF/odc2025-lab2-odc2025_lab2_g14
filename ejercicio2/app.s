@@ -14,10 +14,11 @@
 		nube4:  .dword 282   // Nube 4
 		nube5:  .dword 572   // Nube 5
 		nube6:  .dword 506   // Nube 6
-		delay_value_nubes: .dword 15500000 //delay para anmimacion nubes
+		delay_value_nubes: .dword 15000000 //delay para anmimacion nubes
 		delay_value_marcador: .dword 5800000000 //delay para animacion marcador
-		pelota_x: .dword 480
-		pelota_y: .dword 530
+		pelota_x: .dword 460
+		pelota_y: .dword 560
+		rebote_realizado: .dword 0
 
 	//Incluyo archivo con funciones auxiliares
 	.include "funs.s"
@@ -630,6 +631,14 @@ movz x10, 0x00, lsl 16		//
 
 mov x9, #0 
 loop_animacion:
+//ESTO BORRA LAS NUBES EN C/ITERACION:
+	mov x1, SCREEN_WIDTH
+	mov x2, #56
+	mov x3, #0
+	mov x4, #0
+	movz x10, 0x83, lsl 16 // Elijo color
+	movk x10, 0xb6c1, lsl 00
+	BL pintar_rectangulo
 	mov x1, SCREEN_WIDTH
 	mov x2, #104
 	mov x3, #0
@@ -637,6 +646,7 @@ loop_animacion:
 	movz x10, 0x59, lsl 16
 	movk x10, 0x803a, lsl 00
 	BL pintar_rectangulo
+
 /*----- lineas de la cancha -------*/
 
 	// linea del fondo
@@ -700,6 +710,7 @@ loop_animacion:
 
     B loop_diag2          // Repetir bucle si ambas condiciones se cumplen
 	end_loop2:
+
 
 	//sombra bajo palos
 	mov x1, #230
@@ -789,19 +800,6 @@ loop_animacion:
 	ldr x3, nube5
 	mov x4, #20
 	BL pintar_nube
-
-	/*--  pelota --*/
-	ldr x5, pelota_x
-	ldr x6, pelota_y
-	cmp x6, 369
-	b.lt skip_pelota  //si la pelota ya llego a pos final, se detiene
-	BL pintar_pelota
-	ldr x0, =pelota_x
-	ldr x1, =pelota_y
-	mov x8, #3
-	BL decrementar_pos_pelota
-
-skip_pelota:
 	//pinto pequeño rectangulo del color del pasto p/eliminar trazo
 	mov x1, #225
 	mov x2, #9
@@ -811,14 +809,33 @@ skip_pelota:
 	movk x10, 0xab49, lsl 00
 	BL pintar_rectangulo
 	/*-----*/
-
-	BL pintar_pelota //pinto la posicion final de la pelota
-
+	
+	/*--  pelota --*/
+	ldr x5, pelota_x
+	ldr x6, pelota_y
+	ldr x7, rebote_realizado
+	cmp x7, 1 
+	b.eq skip_rebote
+	BL pintar_pelota
+	ldr x0, =pelota_x
+	ldr x1, =pelota_y
+	mov x8, #3
+	ldr x2, =rebote_realizado
+	BL trayectoria_rebote
+	b skip_marcador
+	
+skip_rebote:
+	cmp x6, #369
+	b.le marcador1
+	BL pintar_pelota
+	ldr x0, =pelota_x
+	ldr x1, =pelota_y
+	mov x8, #3
+	BL trayectoria_gol
+	b skip_marcador
 	//codigo para el marcador
-	add x9, x9, #1
-	cmp x9, delay_value_marcador //si no paso el tiempo, no suma el marcador
-	b.ne skip_marcador 
 	//Borro el 0
+marcador1:
 	mov x1, #66
 	mov x2, #66
 	mov x3, #180
@@ -834,19 +851,11 @@ skip_pelota:
 		mov x4, #138
 		movz x10, 0xde, lsl 16
 		movk x10, 0xd3bc, lsl 00
-		BL pintar_rectangulo	
+		BL pintar_rectangulo
+	BL pintar_pelota //pinto posicion final
 skip_marcador:
 	ldr x7, delay_value_nubes
 	BL delay
-	
-	//ESTO BORRA LAS NUBES EN C/ITERACION:
-	mov x1, SCREEN_WIDTH
-	mov x2, #56
-	mov x3, #0
-	mov x4, #0
-	movz x10, 0x83, lsl 16 // Elijo color
-	movk x10, 0xb6c1, lsl 00
-	BL pintar_rectangulo
  
 	//Incrementar pos x de c/nube:
 	ldr x0, =nube1
