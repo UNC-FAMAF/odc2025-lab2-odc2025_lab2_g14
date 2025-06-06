@@ -36,11 +36,11 @@ pintar_nube:
 	BL pintar_rectangulo //pinta el rectangulo chico
 
 
-	LDR X9, [SP, 0]
-	LDR X11, [SP, 8]
-	LDR X12, [SP, 16]
-	LDR X13, [SP, 24]
-	LDR X30, [SP, 32]
+	LDUR X9, [SP, 0]
+	LDUR X11, [SP, 8]
+	LDUR X12, [SP, 16]
+	LDUR X13, [SP, 24]
+	LDUR X30, [SP, 32]
 	ADD SP, SP, 40
 ret 
 
@@ -68,7 +68,7 @@ pintar_pixel:
 
 		stur w10, [x0]                     
 
-		LDR x30, [SP, 0]
+		LDUR x30, [SP, 0]
 		ADD SP, SP, 8	
 ret
 
@@ -217,12 +217,12 @@ pintar_rectangulo:
 				cbnz x9, loopO	
 
 		// Devolvemos los valores previos del stack
-		LDR x9, [SP, 0]                             
-   		LDR x11, [SP, 8]                             
-    	LDR x12, [SP, 16]                             
-    	LDR x13, [SP, 24]                             
-    	LDR x20, [SP, 32]  // <-- Restauramos x20
-    	LDR x30, [SP, 40]
+		LDUR x9, [SP, 0]                             
+   		LDUR x11, [SP, 8]                             
+    	LDUR x12, [SP, 16]                             
+    	LDUR x13, [SP, 24]                             
+    	LDUR x20, [SP, 32]  // <-- Restauramos x20
+    	LDUR x30, [SP, 40]
     	ADD SP, SP, 48
 
 ret
@@ -282,13 +282,13 @@ pintar_E:
 
 	BL pintar_rectangulo
 
-	LDR x1, [SP, 0]
-	LDR x2, [SP, 8]                             
-   	LDR x3, [SP, 16]                             
-    LDR x4, [SP, 24]                             
-    LDR x5, [SP, 32]                             
-    LDR x20, [SP, 40]  // <-- Restauramos x20
-    LDR x30, [SP, 48]
+	LDUR x1, [SP, 0]
+	LDUR x2, [SP, 8]                             
+   	LDUR x3, [SP, 16]                             
+    LDUR x4, [SP, 24]                             
+    LDUR x5, [SP, 32]                             
+    LDUR x20, [SP, 40]  // <-- Restauramos x20
+    LDUR x30, [SP, 48]
     ADD SP, SP, 64
 	
 
@@ -336,15 +336,15 @@ pintar_H:
 
 	BL pintar_rectangulo
 
-	LDR x1, [SP, 0]
-	LDR x2, [SP, 8]                             
-   	LDR x3, [SP, 16]                             
-    LDR x4, [SP, 24]                             
-    LDR x5, [SP, 32]
-	LDR x6, [SP, 40]
-	LDR x7, [SP, 48]
-    LDR x20, [SP, 56]  // <-- Restauramos x20
-    LDR x30, [SP, 64]
+	LDUR x1, [SP, 0]
+	LDUR x2, [SP, 8]                             
+   	LDUR x3, [SP, 16]                             
+    LDUR x4, [SP, 24]                             
+    LDUR x5, [SP, 32]
+	LDUR x6, [SP, 40]
+	LDUR x7, [SP, 48]
+    LDUR x20, [SP, 56]  // <-- Restauramos x20
+    LDUR x30, [SP, 64]
     ADD SP, SP, 80
 
 ret
@@ -386,15 +386,15 @@ pintar_T:
 
 
 
-	LDR x1, [SP, 0]
-	LDR x2, [SP, 8]                             
-   	LDR x3, [SP, 16]                             
-    LDR x4, [SP, 24]                             
-    LDR x5, [SP, 32]
-	LDR x6, [SP, 40]
-	LDR x7, [SP, 48]
-    LDR x20, [SP, 56]  // <-- Restauramos x20
-    LDR x30, [SP, 64]
+	LDUR x1, [SP, 0]
+	LDUR x2, [SP, 8]                             
+   	LDUR x3, [SP, 16]                             
+    LDUR x4, [SP, 24]                             
+    LDUR x5, [SP, 32]
+	LDUR x6, [SP, 40]
+	LDUR x7, [SP, 48]
+    LDUR x20, [SP, 56]  // <-- Restauramos x20
+    LDUR x30, [SP, 64]
     ADD SP, SP, 80
 ret
 
