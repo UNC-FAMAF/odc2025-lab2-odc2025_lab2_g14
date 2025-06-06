@@ -15,7 +15,7 @@ delay:
 			sub x11, x11, 1
 			cbnz x11, loop_delay
 
-		LDR x11, [SP, 0]					 			
+		LDUR x11, [SP, 0]					 			
 		ADD SP, SP, 8
 ret
 
@@ -55,38 +55,59 @@ pintar_nube:
 	STUR X2, [SP, 48]
 	STUR X3, [SP, 56]
 
-	mov x13, x2 //guardo el alto
-	BL pintar_rectangulo
+	/*------------------------------------------------------------
+      Filtro: no pinto nubes si estan en posicion del tablero
+	  (para disminuir parpaedo)
+         (X ≥ 120  &&  X ≤ 470)  &&  (Y ≤ 63)
+      X3 = pos-x   |   X4 = pos-y
+    ------------------------------------------------------------*/
 
-	movz x10, 0xdf, lsl 16
-	movk x10, 0xdfdd, lsl 00
-	mov x2, #3
-	sub x9, x13, x2 
-	add x4, x4, x13 
-	BL pintar_rectangulo //pinta la sombra
+    CMP   X3, #120
+    BLT   continuar_pintando
 
-	movz x10, 0xff, lsl 16
-	movk x10, 0xffff, lsl 00
-	lsr x9, x1, #1 //divide en 2 el ancho original
-	sub x1, x1, x9
-	lsr x12, x1, #1 //divido en 2 el nuevo ancho
-	add x3, x3, x12
-	sub x4, x4, x13 
-	sub x4, x4, x13
-	mov x2, x13 //restauro el alto
-	BL pintar_rectangulo //pinta el rectangulo chico
+    CMP   X3, #470
+    BGT   continuar_pintando
 
+    CMP   X4, #63
+    BLT   continuar_pintando
 
-	LDR X1, [SP, 40]
-	LDR X2, [SP, 48]
-	LDR X3, [SP, 56]
-	LDR X9, [SP, 0]
-	LDR X4, [SP, 8]
-	LDR X12, [SP, 16]
-	LDR X13, [SP, 24]
-	LDR X30, [SP, 32]
-	ADD SP, SP, 64
-ret 
+    // — Si entra acá, es porque está dentro del área tablero —
+salir_sin_pintar:
+    LDUR  X1,  [SP, 40]
+    LDUR  X2,  [SP, 48]
+    LDUR  X3,  [SP, 56]
+    LDUR  X9,  [SP, 0]
+    LDUR  X4,  [SP, 8]
+    LDUR  X12, [SP, 16]
+    LDUR  X13, [SP, 24]
+    LDUR  X30, [SP, 32]
+    ADD   SP, SP, #64
+    RET
+
+continuar_pintando:
+    MOV   X13, X2           // guardar alto
+    BL    pintar_rectangulo
+
+    MOVZ  X10, 0xDF,  LSL #16
+    MOVK  X10, 0xDFDD, LSL #0
+    MOV   X2, #3
+    SUB   X9, X13, X2
+    ADD   X4, X4, X13
+    BL    pintar_rectangulo       // sombra
+
+    MOVZ  X10, 0xFF,  LSL #16
+    MOVK  X10, 0xFFFF, LSL #0
+    LSR   X9, X1, #1       // mitad del ancho
+    SUB   X1, X1, X9
+    LSR   X12, X1, #1
+    ADD   X3, X3, X12
+    SUB   X4, X4, X13
+    SUB   X4, X4, X13
+    MOV   X2, X13          // restaurar alto
+    BL    pintar_rectangulo       // rectángulo pequeño
+
+    // — EPÍLOGO —
+    B     salir_sin_pintar
 
 borrar_nube: 
 	SUB SP, SP, 16
@@ -101,8 +122,8 @@ borrar_nube:
 	add x2, x2, x2
 	add x2, x2, #3 
 	BL pintar_rectangulo 
-	LDR X30, [SP, 0]
-	LDR X10, [SP, 8]
+	LDUR X30, [SP, 0]
+	LDUR X10, [SP, 8]
 	ADD SP, SP, 8
 	
 ret 
@@ -115,7 +136,7 @@ incrementar_posX:
 	stur x1, [sp, #8]
 	stur x2, [sp, #16]
 	stur x8, [sp, #24]
-    LDR W1, [x0]      // Cargar posX (tercer .word)
+    LDUR W1, [x0]      // Cargar posX (tercer .word)
     ADD W1, W1, W8        // Incrementar X
     MOV W2, SCREEN_WIDTH
     CMP W1, W2
@@ -137,10 +158,10 @@ trayectoria_rebote:
     stur x13, [sp, 16]
     stur x8, [sp, 24]
 	stur x15, [sp, 32]
-    LDR x12, [x0]           // Cargar posX
-    LDR x13, [x1]           // Cargar posY
+    LDUR x12, [x0]           // Cargar posX
+    LDUR x13, [x1]           // Cargar posY
 
-	ldr x15, [x2]
+	LDUR x15, [x2]
 
 	cmp x12, #60
 	b.lt fin_rebote
@@ -188,8 +209,8 @@ trayectoria_gol:
     stur x13, [sp, 16]
     stur x8, [sp, 24]      // Guardar x8 (valor del incremento)
     
-    LDR x12, [x0]           // Cargar posX actual
-    LDR x13, [x1]           // Cargar posY actual
+	LDUR x12, [x0]           // Cargar posX actual
+	LDUR x13, [x1]           // Cargar posY actual
     
     add x12, x12, #4        // incrementar X (movimiento horizontal)
     sub x13, x13, x8        // decrementar Y (movimiento vertical)
@@ -230,7 +251,7 @@ pintar_pixel:
 
 		stur w10, [x0]                     
 
-		LDR x30, [SP, 0]
+		LDUR x30, [SP, 0]
 		ADD SP, SP, 8	
 ret
 
@@ -379,19 +400,15 @@ pintar_rectangulo:
 				cbnz x9, loopO	
 
 		// Devolvemos los valores previos del stack
-		LDR x9, [SP, 0]                             
-   		LDR x11, [SP, 8]                             
-    	LDR x12, [SP, 16]                             
-    	LDR x13, [SP, 24]                             
-    	LDR x20, [SP, 32]  // <-- Restauramos x20
-    	LDR x30, [SP, 40]
+		LDUR x9, [SP, 0]                             
+   		LDUR x11, [SP, 8]                             
+    	LDUR x12, [SP, 16]                             
+    	LDUR x13, [SP, 24]                             
+    	LDUR x20, [SP, 32]  // <-- Restauramos x20
+    	LDUR x30, [SP, 40]
     	ADD SP, SP, 48
 
 ret
-
-
-
-
 
 pintar_E:
 	SUB SP, SP, 64                                        
@@ -444,13 +461,13 @@ pintar_E:
 
 	BL pintar_rectangulo
 
-	LDR x1, [SP, 0]
-	LDR x2, [SP, 8]                             
-   	LDR x3, [SP, 16]                             
-    LDR x4, [SP, 24]                             
-    LDR x5, [SP, 32]                             
-    LDR x20, [SP, 40]  // <-- Restauramos x20
-    LDR x30, [SP, 48]
+	LDUR x1, [SP, 0]
+	LDUR x2, [SP, 8]                             
+   	LDUR x3, [SP, 16]                             
+    LDUR x4, [SP, 24]                             
+    LDUR x5, [SP, 32]                             
+    LDUR x20, [SP, 40]  // <-- Restauramos x20
+    LDUR x30, [SP, 48]
     ADD SP, SP, 64
 	
 
@@ -498,19 +515,18 @@ pintar_H:
 
 	BL pintar_rectangulo
 
-	LDR x1, [SP, 0]
-	LDR x2, [SP, 8]                             
-   	LDR x3, [SP, 16]                             
-    LDR x4, [SP, 24]                             
-    LDR x5, [SP, 32]
-	LDR x6, [SP, 40]
-	LDR x7, [SP, 48]
-    LDR x20, [SP, 56]  // <-- Restauramos x20
-    LDR x30, [SP, 64]
+	LDUR x1, [SP, 0]
+	LDUR x2, [SP, 8]                             
+   	LDUR x3, [SP, 16]                             
+    LDUR x4, [SP, 24]                             
+    LDUR x5, [SP, 32]
+	LDUR x6, [SP, 40]
+	LDUR x7, [SP, 48]
+    LDUR x20, [SP, 56]  // <-- Restauramos x20
+    LDUR x30, [SP, 64]
     ADD SP, SP, 80
 
 ret
-
 
 pintar_T:
 	SUB SP, SP, 80                                      
@@ -546,16 +562,425 @@ pintar_T:
 
 	BL pintar_rectangulo
 
-
-
-	LDR x1, [SP, 0]
-	LDR x2, [SP, 8]                             
-   	LDR x3, [SP, 16]                             
-    LDR x4, [SP, 24]                             
-    LDR x5, [SP, 32]
-	LDR x6, [SP, 40]
-	LDR x7, [SP, 48]
-    LDR x20, [SP, 56]  // <-- Restauramos x20
-    LDR x30, [SP, 64]
+	LDUR x1, [SP, 0]
+	LDUR x2, [SP, 8]                             
+   	LDUR x3, [SP, 16]                             
+    LDUR x4, [SP, 24]                             
+    LDUR x5, [SP, 32]
+	LDUR x6, [SP, 40]
+	LDUR x7, [SP, 48]
+    LDUR x20, [SP, 56]  // <-- Restauramos x20
+    LDUR x30, [SP, 64]
     ADD SP, SP, 80
 ret
+
+pintar_tablero:
+
+	SUB SP, SP, 16
+	STUR X30, [SP, 0]
+	STUR X0, [SP, 8]
+/*TABLERO */
+	//patas
+		mov x9, #166
+		mov x11, #219
+		mov x12, #2
+		loopTablero:
+			mov x1, #27 				//Ancho
+			mov x2, #123				//Largo 
+			mov x3, x9					//Posicion inicial eje x
+			mov x4, x11					//Posicion inicial eje x
+			movz x10, 0x2b, lsl 16		
+			movk x10, 0x3536, lsl 00
+			BL pintar_rectangulo
+			mov x1, #27					//Ancho
+			mov x2, #10					//Largo
+			mov x3, x9					//Posicion inicial eje x
+			sub x4, x11, #10			//Posicion inicial eje x
+			movz x10, 0x0b, lsl 16
+			movk x10, 0x1017, lsl 00
+
+			BL pintar_rectangulo
+
+			sub x12, x12, #1
+			add x9, x9, #282
+			cbnz x12, loopTablero
+		
+	//base del Tablero
+		mov x1, #178
+		mov x2, #144
+		mov x3, #109
+		mov x4, #63
+		movz x10, 0x2b, lsl 16
+		movk x10, 0x3536, lsl 00
+		BL pintar_rectangulo
+		mov x3, #345
+		BL pintar_rectangulo
+
+/*---Pintar Letras---*/
+	//Letras E
+		mov x9, #2
+		mov x11, #243
+		loop_E:
+		mov x1, #8
+		mov x2, #31
+		mov x3, x11
+		mov x4, #78
+		mov x5, #22
+		movz x10, 0xde, lsl 16
+		movk x10, 0xd3bc, lsl 00
+		BL pintar_E
+		sub x9, x9, #1
+		add x11, x11, #176
+		cbnz x9, loop_E
+		
+	//Letra H
+		mov x1, #9
+		mov x2, #29
+		mov x3, #148
+		mov x4, #79
+		mov x5,	#27
+		mov x6, #157
+		mov x7, #90
+
+		BL pintar_H
+
+	//Letra T
+		mov x1, #25
+		mov x2, #6
+		mov x3, #469
+		mov x4, #78
+		mov x5,	#31
+		mov x6, #477
+		mov x7, #84
+
+		BL pintar_T
+
+	//Letra O 
+		mov x1, #16 
+		mov x5, #193
+		mov x6, #94
+		BL pintar_circulo  
+		mov x1, #10
+		movz x10, 0x2b, lsl 16
+		movk x10, 0x3536, lsl 00
+		BL pintar_circulo
+
+	//Letra S
+		// Línea superior horizontal
+		mov x1, #20         // Ancho
+		mov x2, #6          // Alto 
+		mov x3, #445        // X
+		mov x4, #78         // Y 
+		movz x10, 0xde, lsl 16
+		movk x10, 0xd3bc, lsl 00
+		BL pintar_rectangulo
+
+		// Línea media horizontal
+		mov x4, #90         // Y
+		BL pintar_rectangulo
+
+		// Línea inferior horizontal
+		mov x4, #103        // Y
+		BL pintar_rectangulo
+
+		// Línea vertical superior
+		mov x1, #6          // Ancho
+		mov x2, #12         // Alto 
+		mov x4, #84         // Y
+		BL pintar_rectangulo
+
+
+		// Línea vertical inferior
+		mov x3, #459        // X
+		mov x4, #96         // Y
+		BL pintar_rectangulo
+
+	//Letra G
+        // Línea vertical izquierda
+        mov x1, #6          // Ancho
+        mov x2, #31         // Alto
+        mov x3, #370        // X
+        mov x4, #78         // Y
+        BL pintar_rectangulo
+
+        // Línea horizontal superior
+        mov x1, #20         // Ancho
+        mov x2, #6          // Alto
+        BL pintar_rectangulo
+
+        // Línea horizontal inferior
+        mov x4, #103        // Y
+        BL pintar_rectangulo
+
+        // Línea horizontal media
+        mov x1, #12         // Ancho
+        mov x3, #378        // X
+        mov x4, #90         // Y
+        BL pintar_rectangulo
+
+        // Línea vertical derecha (más corta)
+        mov x1, #6          // Ancho
+        mov x2, #14         // Alto
+        mov x3, #384        // X
+        BL pintar_rectangulo
+
+    //Letra U
+        // Línea vertical izquierda
+        mov x1, #6          // Ancho
+        mov x2, #27         // Alto
+        mov x3, #395        // X
+        mov x4, #78         // Y
+        BL pintar_rectangulo
+
+        // Línea vertical derecha
+        mov x3, #409        // X
+        BL pintar_rectangulo
+
+        // Línea horizontal inferior
+        mov x1, #20         // Ancho
+        mov x2, #6          // Alto
+        mov x3, #395        // X
+        mov x4, #103        // Y
+        BL pintar_rectangulo
+
+	// letra M
+		mov x1, #6
+		mov x2, #30
+		mov x3, #212
+		mov x4, #78
+		BL pintar_rectangulo
+		mov x3, #233
+		BL pintar_rectangulo
+	//diagonales M 
+		mov x3, #217
+		mov x4, #78
+		mov x1, #3
+		mov x2, #5
+		loop_diag_M:
+    	BL pintar_rectangulo
+    	ADD x3, x3, #1
+    	ADD x4, x4, #1
+
+    	// Verificar si x3 > 68
+    	MOV x5, #224 
+    	CMP x3, x5
+    	BGE end_loop_m     // Si x3 <= 224, salta al final
+
+    	B loop_diag_M         
+		end_loop_m:
+		//fin diag 1
+
+		loop_diag_M2:
+    	BL pintar_rectangulo
+    	ADD x3, x3, #1
+    	SUB x4, x4, #1
+
+    	// Verificar si x3 > 68
+    	MOV x5, #232
+    	CMP x3, x5
+   		BGE end_loop_m2     // Si x3 <= 229, salta al final
+    	B loop_diag_M2          // Repetir bucle si ambas condiciones se cumplen
+		end_loop_m2:
+
+// Marcadores en 0
+	LDUR X0, [SP, 8]
+	mov x1, #0
+	cmp x1, x0 
+	b.ne skip_0 
+	mov x1, #22			// Radio del círculo exterior
+	mov x5, #205		// Posición X
+	mov x6, #155		// Posición Y inicial
+	mov x12, #3			// Contador para 3 círculos
+	movz x10, 0xde, lsl 16
+	movk x10, 0xd3bc, lsl 00
+
+	loop_marcador1_ext:
+	BL pintar_circulo
+	add x6, x6, #5		// Incrementar Y en 5
+	sub x12, x12, #1
+	cbnz x12, loop_marcador1_ext
+
+	mov x1, #16			// Radio del círculo interior
+	mov x6, #155		// Resetear posición Y
+	mov x12, #3			// Resetear contador
+	movz x10, 0x2b, lsl 16
+	movk x10, 0x3536, lsl 00
+
+	loop_marcador1_int:
+	BL pintar_circulo
+	add x6, x6, #5		// Incrementar Y en 5
+	sub x12, x12, #1
+	cbnz x12, loop_marcador1_int
+skip_0:
+// Segundo marcador
+	mov x1, #22			// Radio del círculo exterior
+	mov x5, #432		// Nueva posición X
+	mov x6, #155		// Resetear posición Y
+	mov x12, #3			// Resetear contador
+	movz x10, 0xde, lsl 16
+	movk x10, 0xd3bc, lsl 00
+
+	loop_marcador2_ext:
+	BL pintar_circulo
+	add x6, x6, #5		// Incrementar Y en 5
+	sub x12, x12, #1
+	cbnz x12, loop_marcador2_ext
+
+	mov x1, #16			// Radio del círculo interior
+	mov x6, #155		// Resetear posición Y
+	mov x12, #3			// Resetear contador
+	movz x10, 0x2b, lsl 16
+	movk x10, 0x3536, lsl 00
+
+	loop_marcador2_int:
+	BL pintar_circulo
+	add x6, x6, #5		// Incrementar Y en 5
+	sub x12, x12, #1
+	cbnz x12, loop_marcador2_int
+
+/*-Firma OdC--**/
+    //letra d
+        mov x1, #6 					// asigno el radio del circulo
+        mov x5, #320 				// asigno el eje x del centro del circulo
+        mov x6, #110 				// asigno el eje y del centro del circulo
+        movz x10, 0x00, lsl 16
+        movk x10, 0x0000, lsl 00    // asigno el color negro a x10
+        BL pintar_circulo 			// pinto el circulo de la letra 'd' (circulo completo)
+
+        mov x1, #4 					// asigno el radio del circulo
+        movz x10, 0xff, lsl 16		
+        movk x10, 0xff00, lsl 00	// asigno el color amarillo para que quede igual que el fondo
+        BL pintar_circulo 			// pinto un segundo circulo dentro del primero para que quede un "huueco" en la d
+
+        movz x10, 0x00, lsl 16
+        movk x10, 0x0000, lsl 00	// asigno el color negro a x10
+        mov x1, #3 					// asigno el ancho
+        mov x2, #16 				// asigno el alto
+        mov x3, #324 				// asigno el eje x
+        mov x4, #101 				// asigno el eje y
+        BL pintar_rectangulo		// pinto la unica recta de la 'd'
+
+    // letra c 
+        mov x3, #330 				// asigno el eje x
+        mov x4, #101 				// asigno el eje y
+        BL pintar_rectangulo		// pinto la unica linea vertical de la 'c'
+
+        mov x1, #10 				// asigno el ancho
+        mov x2, #3 					// asigno el alto
+        mov x4, #101 				// asigno el eje y
+        BL pintar_rectangulo		// pinto la linea horizontal superior de la 'c'
+
+        mov x4, #114 				// asigno el eje y
+        BL pintar_rectangulo		// pinto la linea horizontal inferior de la 'c'
+
+    // letra o 
+        mov x1, #8  				// asigno el radio del circulo
+        mov x5, #304 				// asigno el eje x del centro del circulo
+        mov x6, #109 				// asigno el eje y del centro del circulo
+        BL pintar_circulo  			// pinto el circulo completo que va formando la 'c'
+
+        mov x1, #4 			 		// asigno el radio del circulo
+        movz x10, 0xff, lsl 16
+        movk x10, 0xff00, lsl 00	// asigno a x10 el color amarillo para que sea igual al fondo
+        BL pintar_circulo 			// pinto otro circulo en el centro para formar la letra 'o'
+
+// Dibuja el 2025
+		movz x10, 0x00, lsl 16
+		movk x10, 0x0000, lsl 00	// asigno a x10 el color negro
+
+		//variables para el '2'
+			mov x9, #8	// x9 = ancho del 2
+			mov x12, #300	// x12 = posicion inicial eje x
+			mov x13, #124	// x13 = posicion inicial eje y
+			mov x14, #2	// contador/restador para dibujar dos '2'
+
+		//variables para el '0' y el '5'
+			mov x11, #310		//asigna el eje x para el '0' y también se usa para el '5'
+			mov x15, #124		//asigno el eje y para el '5' (lineas horizontales)
+			mov x17, #124		//asigno el eje y para el '5' (lineas verticales)
+
+
+		loop_año:
+			// dibuja las tres lineas horizontales de los '2'
+				mov x1, x9	// asigno el ancho guardado en x9
+				mov x2, #3	// defino el alto
+				mov x3, x12	// asigno el eje x guardado en x12
+				mov x4, #124	// defino la posicion inicial en el eje y
+
+				BL pintar_rectangulo  // pinta la linea horizontal superior del '2'
+
+
+
+				add x4, x4, #6	// muevo la coordenada y 6 pixeles hacia abajo
+
+				BL pintar_rectangulo // pinto la linea horizontal media del '2'
+
+
+				add x4, x4, #6	// muevo nuevamente el eje y 6 pixeles hacia abajo
+
+				BL pintar_rectangulo	// pinto la linea horizontal inferior del '2'
+			
+
+			// dibuja todo el 5 menos la linea horizontal media
+				mov x3, #330			//asigno el eje x
+				mov x4, x15				//asigno el eje y
+
+				BL pintar_rectangulo	//pinta las lineas horizontales superior e inferior del '5'
+
+				mov x1, #3				//asigno el ancho
+				mov x2, #8				//asigno el alto
+				mov x3, x11				//asigno al eje x el mismo que se usó para el numero '2'
+				add x3, x3, #20			//agrego la diferencia para no dibujar lo mismo
+				mov x4, x17				//asigno el eje y
+
+				BL pintar_rectangulo	//pinta las dos lineas verticales del '5'
+
+
+			// dibuja las dos lineas verticales de los '2'
+				mov x1, #3				// reasigno el ancho
+				mov x2, #6				// reasigno el alto
+				add x3, x12, #5			// reasigno la posicion inicial en el eje x
+				mov x4, #124			// reasigno la posicion inicial en el eje y
+			
+				BL pintar_rectangulo	// dibujo la linea vertical superior del '2'
+			
+				mov x3, x12				// reasigno la posicion inicial en el eje x
+				mov x4, #130			// reasigno la posicion inicial en el eje y
+			
+				BL pintar_rectangulo	// dibujo la linea vertical inferior del '2'
+
+
+
+			// dibuja el 0
+				mov x2, #15				// reasigno el alto
+				mov x3, x11				// reasigno la posicion inicial en el eje x
+				mov x4, #124			// reasigno la posicion inicial en el eje y
+				BL pintar_rectangulo	// dibujo las lineas verticales del '0'
+
+				mov x1, #5				// reasigno el ancho
+				mov x2, #3				// reasigno el alto
+				mov x3, #310			// reasigno la posicion inicial en el eje x
+				mov x4, x15				// reasigno la posicion inicial en el eje y
+				BL pintar_rectangulo	// dibujo las lineas horizontales del '0'
+		
+			add x11, x11, #5	// sumo 5 al eje x para dibujar lineas verticales distintas
+			add x12, x12, #20	// sumo 22 al eje inicial x para dibujar un segundo '2'
+			add x15, x15, #12	// sumo 12 al eje y para dibujar lineas horizontales del '0' y del '5'
+			add x17, x17, #6	// sumo 6 al eje y para dibujar las lineas verticales del '5'
+			sub x14, x14, #1	// le resto 1 al contador para terminar el ciclo
+			cbnz x14, loop_año	// si x14 = 0 entonces salta a la etiqueta loop_año
+			// termino de dibujar la linea horizontal media del '5'
+				mov x1, #8				//reasigno el ancho
+				mov x2, #3				//reasigno el alto
+				mov x3, #330			//reasigno el eje x
+				mov x4, #130			//reasigno el eje y
+
+				BL pintar_rectangulo	//dibujo la linea horizontal media del '5'
+		
+/*---fin tablero----*/
+	LDUR X0, [SP, 8]
+	LDUR X30, [SP, 0]
+	ADD SP, SP, 16
+
+ret 
+

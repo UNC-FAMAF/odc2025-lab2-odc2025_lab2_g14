@@ -10,7 +10,7 @@ El programa pinta una imagen de una cancha de fútbol con un marcador, arboles y
 
 
 ### Descripción ejercicio 2:
-La animacion se realiza sobre las nubes moviendose infinitamente (cada una con su velocidad y tamaño), y sobre una pelota que, recien cuando entra al arco, aumenta el marcador local en 1.
+La animacion se realiza sobre las nubes moviendose infinitamente (cada una con su velocidad y tamaño), y sobre una pelota que, recien cuando entra al arco, aumenta el marcador local en 1. La velocidad de la pelota y las nubes puede verse modificada segun cada computadora, la idea es que la pelota entre al arco a los siete segundos.
 
 ### Justificación instrucciones ARMv8:
 En el trabajo se requiere acceder a valores definidos en memoria mediante .dword, asociadas a etiquetas (por ejemplo nube1: .dword 95). Pero el conjunto de instrucciones LEGv8 no nos permitió cargar estos valores a registros directamente (se podría, pero el codigo se extendería muchisimo más). Tratamos de usar LDUR pero tuvimos que recurrir al uso de LDR es varias ocasiones ya que en la práctica es la forma mas directa para acceder a un valor definido con una etiqueta en .data. Esta instrucción permite cargar el valor a un registro desde una dirección simbólica sin necesidad de manejar las direcciones base. Por lo tanto, se justifica su uso como una excepción necesaria para poder acceder a datos en memoria de una forma 'llevadera' (dada la extensión de este programa)
